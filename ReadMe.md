@@ -1,4 +1,4 @@
-### EVALUATING AND COMPARING SEISMICITY MDEOLS IN THE LOW STRAIN RATE OTAGO REGION, AOTEAROA NEW ZEALAND
+## EVALUATING AND COMPARING SEISMICITY MDEOLS IN THE LOW STRAIN RATE OTAGO REGION, AOTEAROA NEW ZEALAND
 
 
 The following contains the codes used to perform the analysis in:
@@ -31,7 +31,7 @@ In addition, this library contains the following folders and files:
 
 -paleoseismic_constraints: compile estimates for surface rupture timings in Otago from paleoseismic studies, and use to calculate an annual rate of surface rupturing events
 
-### SCRIPTS [RUNS IN MATLAB]
+## SCRIPTS [RUNS IN MATLAB]
 
 all_catalog_comparison.m: Once all analyses and necessary output files have been generated in the folders listed above, this allows a comparison of the various seismicity rate models developed for Otago. Plots include:
 
@@ -53,7 +53,7 @@ all_catalog_comparison.m: Once all analyses and necessary output files have been
 
 -(9) MFDs for NZ NSHM 2022 and Otago RSQSim Catalog to show influence of scaling down event magnitudes by area in Otago, and MFD comparison for geologic and geodetic deformation model IFM logic tree branches (equivalent to Figure S2 in manuscript)
 
-### REFERENCES
+## REFERENCES
 
 -Dieterich, J. H., & Richards-Dinger, K. B. (2010). Earthquake recurrence in simulated fault systems. In Seismogenesis and earthquake forecasting: The Frank Evison (Vol. 2, pp. 233–250). Springer.
 -Gerstenberger, M. C., Van Dissen, R., Rollins, C., DiCaprio, C., Thingbaijim, K. K., Bora, S., ... & Williams, C. (2024). The seismicity rate model for the 2022 Aotearoa New Zealand national seismic hazard model. Bulletin of the Seismological Society of America, 114(1), 182-216.
