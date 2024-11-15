@@ -1,4 +1,4 @@
-### EVALUATING AND COMPARING SEISMICITY MDEOLS IN THE LOW STRAIN RATE OTAGO REGION, AOTEAROA NEW ZEALAND ### 
+EVALUATING AND COMPARING SEISMICITY MDEOLS IN THE LOW STRAIN RATE OTAGO REGION, AOTEAROA NEW ZEALAND 
 
 
 The following contains the codes used to perform the analysis in:
@@ -39,9 +39,15 @@ all_catalog_comparison.m: Once all analyses and necessary output files have been
 
 -Dieterich, J. H., & Richards-Dinger, K. B. (2010). Earthquake recurrence in simulated fault systems. In Seismogenesis and earthquake forecasting: The Frank Evison (Vol. 2, pp. 233–250). Springer.
 -Gerstenberger, M. C., Van Dissen, R., Rollins, C., DiCaprio, C., Thingbaijim, K. K., Bora, S., ... & Williams, C. (2024). The seismicity rate model for the 2022 Aotearoa New Zealand national seismic hazard model. Bulletin of the Seismological Society of America, 114(1), 182-216.
+
 -Iturrieta, P., Gerstenberger, M. C., Rollins, C., Van Dissen, R., Wang, T., & Schorlemmer, D. (2024). Accounting for the variability of earthquake rates within low‐seismicity regions: Application to the 2022 Aotearoa New Zealand National Seismic Hazard Model. Bulletin of the Seismological Society of America, 114(1), 217-243.
+
 -Johnson, K. M., Wallace, L. M., Maurer, J., Hamling, I., Williams, C., Rollins, C., ... & Van Dissen, R. (2024). Inverting geodetic strain rates for slip deficit rate in complex deforming zones: An application to the New Zealand plate boundary. Journal of Geophysical Research: Solid Earth, 129(3), e2023JB027565.
+
 -Richards‐Dinger, K., & Dieterich, J. H. (2012). RSQSim earthquake simulator. Seismological Research Letters, 83(6), 983-990.
+
 -Rollins C, Thingbaijam KK, Hutchinson, J, Gerstenberger M, Christophersen A, Eberhart-Phillips D, Rastin SJ, Van Dissen R. (2022). An augmented New Zealand earthquake catalogue, event classifications, and models of the depth distribution of shallow earthquakes in the greater New Zealand region Lower Hutt (NZ): GNS Science. 83 p. (GNS Science report; 2021/58).
+
 -Seebeck, H., Van Dissen, R., Litchfield, N., Barnes, P. M., Nicol, A., Langridge, R., ... & Lee, J. (2024). The New Zealand Community Fault Model–version 1.0: An improved geological foundation for seismic hazard modelling. New Zealand Journal of Geology and Geophysics, 67(2), 209-229.
+
 -Youngs, R. R., & Coppersmith, K. J. (1985). Implications of fault slip rates and earthquake recurrence models to probabilistic seismic hazard estimates. Bulletin of the Seismological society of America, 75(4), 939-964.
