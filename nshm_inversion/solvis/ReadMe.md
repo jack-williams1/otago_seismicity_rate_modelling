@@ -38,7 +38,7 @@ CRU_fault_system_solution.zip & NSHM_v1.0.4_CompositeSolution.zip: inversion res
 
 ## SCRIPTS
 
-!Scripts select_ruptures_by_polygon.py, get_rupture_traces.py, and get_section_area.py need to be run in solvis directory, and through command line using poetry: poetry run python scripts/xxxxxx.py !
+! Scripts select_ruptures_by_polygon.py, get_rupture_traces.py, and get_section_area.py need to be run in solvis directory, and through command line using poetry: poetry run python scripts/xxxxxx.py !
 
 nshm_inversion/solvis/scripts/select_ruptures_by_polygon.py: Select ruptures from the inversion solution that are within or intersect a spatial polygon (here set to 'orb_area_polygon'). Returns .csv file that collates the rupture info. Calculates a down-weighted rupture magnitude based on how many of its sections are within the spatial polygon. Analysis can be done for weighted average of all inversion logic tree branches or individual branches. See 'nshm_logictreebranch_lookuptable.txt' for info on what each branch means. Can also return 'otago_fault_sections.csv' which collates information about the individual ruptures that each section participates in (this is currently commented out). This is necessary for running scripts in nshm_inversion/mfd_analysis
 
