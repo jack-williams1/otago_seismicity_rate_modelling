@@ -2,7 +2,7 @@
 
 ## PREAMBLE
 
-Analyse earthquake forecasts developed from the NZ NSHM 2022 Distributed Seismicity Model (DSM). The DSM has two components: Multiplicative hybrid forecast (Rastin et al 2024), and Uniform Rate Zones (Iturrieta et al 2022, 2024). These have then been combined using a floor ensemble method (Iturrieta et al 2024). Note, the multiplicative forecast is for 100 years, whilst the URZ forecasts are for 50-years. These codes provide the ability to extract and analyse forecast rates for spatial cells contained within the Otago study area
+Analyse earthquake forecasts developed from the NZ NSHM 2022 Distributed Seismicity Model (DSM). The DSM has two components: Multiplicative hybrid forecast (Rastin et al 2024), and Uniform Rate Zones (Iturrieta et al 2022, 2024). These have then been combined using a floor ensemble method (Iturrieta et al 2024). Note, the multiplicative forecast is for 100-years, whilst the URZ forecasts are for 50-years. These codes provide the ability to extract and analyse forecast rates for spatial cells contained within the Otago study area
 
 ## INPUTS
 
