@@ -45,7 +45,7 @@ all_catalog_comparison.m: Once all analyses and necessary output files have been
 
 -(5) MFD of the Otago RSQSim Catalog and 70-year period samples (equivalent to Figure 6 in the manuscript)
 
--(6) plot and compare the NZ NSHM 2022 DSM 50-year forecast's MFD with 50 year samples from the Otago RSQSim Catalog and stochastic event catalogs (equivalent to Figure S20 in the manuscript)
+-(6) plot and compare the NZ NSHM 2022 URZ 50-year forecast's MFD with 50 year samples from the Otago RSQSim Catalog and stochastic event catalogs (equivalent to Figure S20 in the manuscript)
 
 -(7) plot and compare MFDs obtained from the NZ NSHM 2022 with the paleoseismic constraint, and the Otago RSQSim Catalog and stochastic event catalogs (with 10,000 catalog subsamples) to the paleoseismic constraint (equivalent to Figure 12 in the manuscript)
 
