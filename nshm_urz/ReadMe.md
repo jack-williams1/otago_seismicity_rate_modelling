@@ -27,9 +27,9 @@ nshm_urz/inputs/deg2utm.m: function to convert geographic coordinates (Palacios 
 
 ## SCRIPTS
 
-nshm_urz/find_centre_point.m: code to extract the centre point of each forecasts' spatial cell (where each spatial cell is a 0.1 x 0.1 long-lat box). The centre point and its forecast rate are then written into a .txt file, which is useful for plotting the rates as a raster file in (for example) QGIS. See for example, Figure 9a-c in the manuscript. [note this file has been run already]
+nshm_urz/find_centre_point.m: code to extract the centre point of each forecasts' spatial cell (where each spatial cell is a 0.1 x 0.1 long-lat box). The centre point and its forecast rate are then written into a .txt file, which is useful for plotting the rates as a raster file in (for example) QGIS. See for example, Figure 6a-c in the manuscript. [note this file has been run already]
 
-nshm_urz/nshm_urz_analysis.m: First selects all spatial cells centred within Otago study area. The for each forecast, extracts rate, with option to plot rates, and save values in a .txt file. By summing the rates from all Otago cells, it is then possible to get the total regional rate (once renormalised for absolute rates of M>4.95 earthquakes in NZ hybrid volume. Using the crustal b-value then possible to construct MFD's for forecast, compare to last 50 years of Otago seismicity (using output of catalogs_instrumental/nz_augmented_catalog.m), and randomly simulate 1000x alternative forecasts for each recurrence mode;, as shown in Figure 9 in the main manuscript
+nshm_urz/nshm_urz_analysis.m: First selects all spatial cells centred within Otago study area. The for each forecast, extracts rate, with option to plot rates, and save values in a .txt file. By summing the rates from all Otago cells, it is then possible to get the total regional rate (once renormalised for absolute rates of M>4.95 earthquakes in NZ hybrid volume. Using the crustal b-value then possible to construct MFD's for forecast, compare to last 50 years of Otago seismicity (using output of catalogs_instrumental/nz_augmented_catalog.m), and randomly simulate 1000x alternative forecasts for each recurrence mode;, as shown in Figure 6 in the main manuscript
 
 
 ## REFERENCES
