@@ -1124,6 +1124,19 @@ files = [
 ]
 
 [[package]]
+name = "gdal"
+version = "3.8.0"
+description = "GDAL: Geospatial Data Abstraction Library"
+optional = false
+python-versions = ">=3.6.0"
+files = [
+    {file = "GDAL-3.8.0.tar.gz", hash = "sha256:9ec312ccd48a1182603feebb38de7bf2e824d16fbefbd8f2e5041a3af2aada07"},
+]
+
+[package.extras]
+numpy = ["numpy (>1.0.0)"]
+
+[[package]]
 name = "geopandas"
 version = "1.0.1"
 description = "Geographic pandas extensions"
@@ -4224,4 +4237,4 @@ vtk = ["pyvista"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "1bc62764abf60f2ffe07e2526a62c6e96df1e480098e5d66063481660b2edc26"
+content-hash = "e2acf9fc9564b91f25d7ba886749a27595870d7df4b8bf56cd58c3819c715de2"

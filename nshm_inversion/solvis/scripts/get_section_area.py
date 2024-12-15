@@ -32,7 +32,7 @@ polygon: Polygon = shape(geojson['features'][0]['geometry'])
 
 # load the model
 os.chdir('nshm_inversion')
-slt = nm.get_model_version("NSHM_v1.0.4").source_logic_tree()
+slt = nm.get_model_version("NSHM_v1.0.4").source_logic_tree
 comp = CompositeSolution.from_archive("NSHM_v1.0.4_CompositeSolution.zip", slt)
 
 #Go back to solvis directory
