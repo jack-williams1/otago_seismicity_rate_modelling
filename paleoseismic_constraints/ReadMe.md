@@ -2,7 +2,7 @@
 
 ## INPUTS
 
-paleoseismic_constraints/OtagoEarthquakeTimings.xlsx: Spreadsheet with event timings for all known surface ruptures within the Otago study area. See 'Refs' column and Table 3 in manuscript for references for these estimates.
+paleoseismic_constraints/OtagoEarthquakeTimings.xlsx: Spreadsheet with event timings for all known surface ruptures within the Otago study area. See 'Refs' column and Table 4 in manuscript for references for these estimates.
 
 paleoseismic_constraints/assymmetric_dist/: Folder containing text files that describe the event timings where the event timing's probability distribution is assymmetric (hence ages cannot be treated as a normal distribution
 
