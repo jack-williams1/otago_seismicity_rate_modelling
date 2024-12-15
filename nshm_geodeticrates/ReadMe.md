@@ -16,7 +16,7 @@ This requires that "nshm_inversion/solvis/scripts/get_section_are.py" is run fir
 
 ## SCRIPTS
 
-nshm_geodetic_rates/extract_otago_sections.py: extract slip rate estimates from the NZ NSHM 2022 geodetic model (Johnson et al 2022, 2024) for faults within the Otago study area polygon (orb_area_polygon.geojson). Data extracted from file 'fault_sections.geojson' and used to create file 'otago_sections_geodetic_rates.geojson' which is necessary for running the geodetic based stochastic catalogs. Code also used to compare geodetic and geologic (i.e., NZ CFM, Seebeck et al 2024, van Dissen et al 2024) slip rate estimates for Otago faults (Figure 10 in manuscript)
+nshm_geodetic_rates/extract_otago_sections.py: extract slip rate estimates from the NZ NSHM 2022 geodetic model (Johnson et al 2022, 2024) for faults within the Otago study area polygon (orb_area_polygon.geojson). Data extracted from file 'fault_sections.geojson' and used to create file 'otago_sections_geodetic_rates.geojson' which is necessary for running the geodetic based stochastic catalogs. Code also used to compare geodetic and geologic (i.e., NZ CFM, Seebeck et al 2024, van Dissen et al 2024) slip rate estimates for Otago faults (Figure 12 in manuscript)
 
 ## REFERENCES
 
