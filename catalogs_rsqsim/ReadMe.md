@@ -31,6 +31,9 @@ gdal: https://pypi.org/project/GDAL/
 ## REFERENCES
 
 -Dieterich, J. H., & Richards-Dinger, K. B. (2010). Earthquake recurrence in simulated fault systems. In Seismogenesis and earthquake forecasting: The Frank Evison (Vol. 2, pp. 233–250). Springer.
+
 -Gerstenberger, M. C., Van Dissen, R., Rollins, C., DiCaprio, C., Thingbaijim, K. K., Bora, S., ... & Williams, C. (2024). The seismicity rate model for the 2022 Aotearoa New Zealand national seismic hazard model. Bulletin of the Seismological Society of America, 114(1), 182-216.
+
 -Richards‐Dinger, K., & Dieterich, J. H. (2012). RSQSim earthquake simulator. Seismological Research Letters, 83(6), 983-990.
+
 -Seebeck, H., Van Dissen, R., Litchfield, N., Barnes, P. M., Nicol, A., Langridge, R., ... & Lee, J. (2024). The New Zealand Community Fault Model–version 1.0: An improved geological foundation for seismic hazard modelling. New Zealand Journal of Geology and Geophysics, 67(2), 209-229.
