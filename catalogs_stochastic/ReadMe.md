@@ -24,15 +24,15 @@ catalog_stochastic/catalog_analysis.m: Analyses catalog selected by aperiodicity
 
 catalog_stochastic/catalog_analysis_byfault.m: Analyses catalog events for individual fault source (set by 'ff' and 'select_opt') and aperiodicity. Can simultaneously analyse catalog events for multiple renewal processes. Analyses include: (1) plot fault's MFD in catalogs with different renewal processes, (2) plot fault's MFD against recurrence model's median theoretical MFD, (3) plot all of the fault's theoretical MFDs (from exploring different b-value and Mmax combinations), and (4) plot theoretical and catalog interevent times and hazard functions (following Yakovlev et a 2006) for fault. 
 
-catalog_stochastic/plot_bpt_loadstate.m: Plot evolution of load state variable of the BPT catalog for a given fault and catalog time window. Single plot shows load state variable for both G-R and characteristic catalogs. Option to show multiple plots for catalogs with different fault aperiodicities (is equivalent to Figure S6 in manuscript). 
+catalog_stochastic/plot_bpt_loadstate.m: Plot evolution of load state variable of the BPT catalog for a given fault and catalog time window. Single plot shows load state variable for both G-R and characteristic catalogs. Option to show multiple plots for catalogs with different fault aperiodicities (is equivalent to Figure S5 in manuscript). 
 
-catalog_stochastic/plot_catalog_comparison.m: Provides capability to plot multiple stochastic event catalogs together. Here is configured to compare the overall catalog's MFD for difference renewal plots, moment rate for individual faults, MFD for single fault, and mean and standard deviation of fault recurrence interval in Weibull catalogs. Equivalent to Figure S7 in manuscript.
+catalog_stochastic/plot_catalog_comparison.m: Provides capability to plot multiple stochastic event catalogs together. Here is configured to compare the overall catalog's MFD for difference renewal plots, moment rate for individual faults, MFD for single fault, and mean and standard deviation of fault recurrence interval in Weibull catalogs. Equivalent to Figure S8 in manuscript.
 
-catalog_stochastic/plot_emptycounts.m: For each stochastic event catalog, plot number of 70-year catalog samples with zero events. Figure arranged, so each plot shows the same aperiodicity value, but different renewal processes and on-fault MFDs. Equivalent to Figure 8 in manuscript. Requires catlaog_analysis.m to have been run for all catalogs prior to plotting.
+catalog_stochastic/plot_emptycounts.m: For each stochastic event catalog, plot number of 70-year catalog samples with zero events. Figure arranged, so each plot shows the same aperiodicity value, but different renewal processes and on-fault MFDs. Equivalent to Figure 10 in manuscript. Requires catlaog_analysis.m to have been run for all catalogs prior to plotting.
 
-catalog_stochastic/plot_intertimes.m: Plots interevent times and hazard functions for fault ff in different stochastic catalogs. Used for Figure S8 in manuscript.
+catalog_stochastic/plot_intertimes.m: Plots interevent times and hazard functions for fault ff in different stochastic catalogs. Used for Figure S9 in manuscript.
 
-catalogs_stochastic/plot_recurrence_model.m: Compare median MFDs for multiple faults from Young and Coppersmith (1985) recurrence models (e.g., Figure 2c in manuscript), and compare all MFD's for a single fault from exploring all b-value M-max combinations (e.g., Figure S5b).
+catalogs_stochastic/plot_recurrence_model.m: Compare median MFDs for multiple faults from Young and Coppersmith (1985) recurrence models (e.g., Figure 2c in manuscript), and compare all MFD's for a single fault from exploring all b-value M-max combinations (e.g., Figure S8).
 
 ## REFERENCE
 
