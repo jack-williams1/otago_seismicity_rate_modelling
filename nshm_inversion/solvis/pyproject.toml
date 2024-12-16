@@ -6,9 +6,6 @@ license = "AGPL3"
 readme = "ReadMe.md"
 packages = []
 
-[tool.poetry.scripts]
-cli = 'scripts.cli:cli'
-
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
 solvis = {git = "https://github.com/GNS-Science/solvis.git", rev = "1cbdb91075b96a0b4bd2ab384d0ba9c70894b417"}
