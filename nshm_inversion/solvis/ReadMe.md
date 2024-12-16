@@ -6,7 +6,8 @@ Scripts for analysing seismicity forecasts for Otago from the NZ NSHM 2022 Inver
 
 nz nshm dependencies
 
--nzmshm-model: https://gns-science.github.io/nzshm-model/
+ - (nzshm-model)[https://github.com/GNS-Science/nzshm-model] from GNS Science NSHM
+ - solvis (https://gns-science.github.io/solvis/): library for geospatial analysis of the OpenSHA inversion solutions from the NZ NSHM 2022.
 
 misc dependencies
 
@@ -24,7 +25,7 @@ gdal: https://pypi.org/project/GDAL/
 
 -included in this folder:
 
-Solvis (https://gns-science.github.io/solvis/): library for geospatial analysis of the OpenSHA inversion solutions from the NZ NSHM 2022. We include a barebone version of this library here.
+ We include a barebone version of this library here.
 
 nshm_logictreebranch_lookuptable.txt: Lookup table for parameters that each inversion fault model logic tree branch explores
 
