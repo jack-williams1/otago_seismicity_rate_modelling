@@ -4,50 +4,45 @@ Scripts for analysing seismicity forecasts for Otago from the NZ NSHM 2022 Inver
 
 ## DEPENDENCIES ##
 
-nz nshm dependencies
+### nz nshm dependencies
 
- - (nzshm-model)[https://github.com/GNS-Science/nzshm-model] from GNS Science NSHM
- - solvis (https://gns-science.github.io/solvis/): library for geospatial analysis of the OpenSHA inversion solutions from the NZ NSHM 2022.
+From the GNS Science NSHM project:
 
-misc dependencies
+ - [solvis](https://github.com/GNS-Science/solvis/): library for geospatial analysis of the OpenSHA inversion solutions from the NZ NSHM 2022.
+ - [nzshm-model](https://github.com/GNS-Science/nzshm-model) containiing meta data about ther NSHM model logic tree branches.
 
-GeoPandas: https://geopandas.org/en/stable/
+All project dependencies are listed in the file [pyproject.toml](pyproject.toml)
 
-NumPy: https://numpy.org
+### Included in this folder:
 
-Python poetry: https://github.com/python-poetry/install.python-poetry.org
+ - (nshm_logictreebranch_lookuptable.txt): Lookup table for parameters that each inversion fault model logic tree branch explores. NB this information is also available in the nzshm-model package.
 
-Shapely: https://pypi.org/project/shapely/
+ - scripts/...: Folder containing python scripts for analysing the IFM results
 
-Pathlib: https://docs.python.org/3/library/pathlib.html
+ - WORK/... : Folder containing outputs to script runs
 
-gdal: https://pypi.org/project/GDAL/
-
--included in this folder:
-
- We include a barebone version of this library here.
-
-nshm_logictreebranch_lookuptable.txt: Lookup table for parameters that each inversion fault model logic tree branch explores
-
-scripts/...: Folder containing python scripts for analysing the IFM results
-
-WORK/... : Folder containing outputs to script runs
-
--included in directory above:
+- included in parent directory (nshm_inversion):
 
 CRU_fault_system_solution.zip & NSHM_v1.0.4_CompositeSolution.zip: inversion results from v1.0.4 of the NZ NSHM 2022
 
-## SCRIPTS
 
-Scripts select_ruptures_by_polygon.py, get_rupture_traces.py, and get_section_area.py need to be run in solvis directory, and through command line using poetry: poetry run python scripts/xxxxxx.py 
+This project uses **poetry** to install and manage dependencies. To install poetry, see https://python-poetry.org/docs/#installing-with-the-official-installer
 
--nshm_inversion/solvis/scripts/select_ruptures_by_polygon.py: Select ruptures from the inversion solution that are within or intersect a spatial polygon (here set to 'orb_area_polygon'). Returns .csv file that collates the rupture info. Calculates a down-weighted rupture magnitude based on how many of its sections are within the spatial polygon. Analysis can be done for weighted average of all inversion logic tree branches or individual branches. See 'nshm_logictreebranch_lookuptable.txt' for info on what each branch means. Can also return 'otago_fault_sections.csv' which collates information about the individual ruptures that each section participates in (this is currently commented out). This is necessary for running scripts in nshm_inversion/mfd_analysis
+The project requires python 3.10 or above. Use your preferred ptyhon environment manager to provide an clean python , then run `poetry install` which will install the required libraries.
 
--nshm_inversion/solvis/scripts/get_section_area.py: Returns the area of each fault section within a spatial polygon. This is necessary for finding a fault's partial moment within a given rupture (as used in 'nshm_inversion_results_by_fault.m'). Also option to return .geojson file for each rupture that an Otago fault participates in. This is necessary to run get_fault_rupture_patches.py
+### Scripts
 
--nshm_inversion/solvis/scripts/get_rupture_traces.py: Select all fault sections of ruptures that are within or intersect a spatial polygon (here set to orb_area_polygon) for all, or a given, logic tree branch. Then for each fault section, sum the rates for all ruptures that are associated with the section (i.e. 'participation rate'), and return this with the section info as a .geojson file. Can be used to plot maps of fault sections within traces coloured by rate (equivalent to Figure S3 in manuscript).
+The scripts `select_ruptures_by_polygon.py`, `get_rupture_traces.py`, and `get_section_area.py` need to be run in solvis directory, and through command line using poetry:
 
--nshm_inversion/solvis/scripts/get_fault_rupture_patches.py: For some given faults, will find all ruptures that they participate in and their rates for the 3 geologic deformation logic tree branches explored here. Will then plot the fault's rupture patches in map, coloured semi-quantitatively by the rupture's rate. Plot is equivalent to Figure S10 in the manuscript. Requires that rupture surfaces have been created in get_section_area.py, and rupture rates are collated from nshm_otago_inversion_results_by_fault.m Needs to be run from the working directory '...nshm_inversion/solvis. This can be run through a Python IDE (e.g., Spyder). 
+`poetry run python scripts/xxxxxx.py`
+
+- `nshm_inversion/solvis/scripts/select_ruptures_by_polygon.py`: Select ruptures from the inversion solution that are within or intersect a spatial polygon (here set to 'orb_area_polygon'). Returns .csv file that collates the rupture info. Calculates a down-weighted rupture magnitude based on how many of its sections are within the spatial polygon. Analysis can be done for weighted average of all inversion logic tree branches or individual branches. See 'nshm_logictreebranch_lookuptable.txt' for info on what each branch means. Can also return 'otago_fault_sections.csv' which collates information about the individual ruptures that each section participates in (this is currently commented out). This is necessary for running scripts in nshm_inversion/mfd_analysis
+
+- `nshm_inversion/solvis/scripts/get_section_area.py`: Returns the area of each fault section within a spatial polygon. This is necessary for finding a fault's partial moment within a given rupture (as used in 'nshm_inversion_results_by_fault.m'). Also option to return .geojson file for each rupture that an Otago fault participates in. This is necessary to run get_fault_rupture_patches.py
+
+- `nshm_inversion/solvis/scripts/get_rupture_traces.py`: Select all fault sections of ruptures that are within or intersect a spatial polygon (here set to orb_area_polygon) for all, or a given, logic tree branch. Then for each fault section, sum the rates for all ruptures that are associated with the section (i.e. 'participation rate'), and return this with the section info as a .geojson file. Can be used to plot maps of fault sections within traces coloured by rate (equivalent to Figure S3 in manuscript).
+
+- `nshm_inversion/solvis/scripts/get_fault_rupture_patches.py`: For some given faults, will find all ruptures that they participate in and their rates for the 3 geologic deformation logic tree branches explored here. Will then plot the fault's rupture patches in map, coloured semi-quantitatively by the rupture's rate. Plot is equivalent to Figure S10 in the manuscript. Requires that rupture surfaces have been created in get_section_area.py, and rupture rates are collated from nshm_otago_inversion_results_by_fault.m Needs to be run from the working directory '...nshm_inversion/solvis. This can be run through a Python IDE (e.g., Spyder).
 
 ## REFERENCES
 
