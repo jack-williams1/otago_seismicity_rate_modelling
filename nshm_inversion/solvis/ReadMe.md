@@ -1,9 +1,8 @@
-## NSHM INVERSION FAULT MODEL ANALYSIS WITH SOLVIS [RUNS IN PYTHON]
+# NSHM INVERSION FAULT MODEL ANALYSIS WITH SOLVIS [RUNS IN PYTHON]
 
 Scripts for analysing seismicity forecasts for Otago from the NZ NSHM 2022 Inversion Fault Model(Gerstenberger et al 2024)
 
 ## DEPENDENCIES ##
-
 
 From the GNS Science NSHM project:
 
@@ -25,11 +24,13 @@ All project dependencies are listed in the file [pyproject.toml](pyproject.toml)
 CRU_fault_system_solution.zip & NSHM_v1.0.4_CompositeSolution.zip: inversion results from v1.0.4 of the NZ NSHM 2022
 
 
+## INSTALLATION
+
 This project uses **poetry** to install and manage dependencies. To install poetry, see https://python-poetry.org/docs/#installing-with-the-official-installer
 
 The project requires python 3.10 or above. Use your preferred python environment manager to provide a clean python3.x , then run `poetry install` which will install the required libraries.
 
-### Scripts
+## SCRIPTS
 
 The scripts `select_ruptures_by_polygon.py`, `get_rupture_traces.py`, and `get_section_area.py` need to be run in solvis directory, and through command line using poetry e.g.
 `poetry run python scripts/xxxxxx.py`
@@ -48,6 +49,5 @@ Gerstenberger, M. C., Van Dissen, R., Rollins, C., DiCaprio, C., Thingbaijim, K.
 
 ## TROUBLE SHOOTING
 
--If solvis cannot import modules, in command line, and in the correct environment and working directory, run: poetry install [https://github.com/python-poetry/poetry/issues/1868] 
-
--If return errors such as "EOFError: marshal data too short" ensure ALL __pycache__ folders are empty and/or check directory to solvis that is included in them 
+- If solvis cannot import modules, in command line, and in the correct environment and working directory, run: poetry install [https://github.com/python-poetry/poetry/issues/1868]
+- If return errors such as "EOFError: marshal data too short" ensure ALL __pycache__ folders are empty and/or check directory to solvis that is included in them
