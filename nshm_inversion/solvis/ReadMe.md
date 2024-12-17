@@ -24,7 +24,7 @@ All project dependencies are listed in the file [pyproject.toml](pyproject.toml)
 
 ## Source data
 
-The file **NSHM_v1.0.4_CompositeSolution.zip** should be located in the parent folder `nshm_inversion`. This file contains the  inversion results from v1.0.4 of the NZ NSHM 2022. TO acquire a copy please send an email request to nshm@gnz.cri.nz .
+The file **NSHM_v1.0.4_CompositeSolution.zip** should be located in the parent folder `nshm_inversion`. This file contains the  inversion results from v1.0.4 of the NZ NSHM 2022. To acquire a copy, please send an email to: nshm@gnz.cri.nz
 
 ## INSTALLATION
 
