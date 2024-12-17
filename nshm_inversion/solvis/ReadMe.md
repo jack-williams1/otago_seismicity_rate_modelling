@@ -21,8 +21,10 @@ All project dependencies are listed in the file [pyproject.toml](pyproject.toml)
 
 - included in parent directory (nshm_inversion):
 
-CRU_fault_system_solution.zip & NSHM_v1.0.4_CompositeSolution.zip: inversion results from v1.0.4 of the NZ NSHM 2022
 
+## Source data
+
+The file **NSHM_v1.0.4_CompositeSolution.zip** should be located in the parent folder `nshm_inversion`. This file contains the  inversion results from v1.0.4 of the NZ NSHM 2022. TO acquire a copy please send an email request to nshm@gnz.cri.nz .
 
 ## INSTALLATION
 
