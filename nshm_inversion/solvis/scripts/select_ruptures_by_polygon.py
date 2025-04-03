@@ -13,7 +13,7 @@ import pyproj #added by JW
 import numpy as np #added by JW
 import os #added by JW
 
-from solvis import CompositeSolution, FaultSystemSolution, export_geojson
+from solvis import CompositeSolution, FaultSystemSolution
 
 #Set logic tree exploration option
 # 1 = weighted mean rates from all branches
