@@ -14,11 +14,11 @@ import numpy as np #added by JW
 import os #added by JW
 
 from solvis import CompositeSolution, FaultSystemSolution
+from solvis.filter import FilterRuptureIds
 
 #Set logic tree exploration option
 # 1 = weighted mean rates from all branches
 # 2 = select certain branch
-
 logic_tree_opt=1
 
 #select branch. 
@@ -48,13 +48,14 @@ os.chdir('solvis')
 fss: FaultSystemSolution = comp._solutions['CRU']  # NB this API call will change in the future
 
 # get the rupture_ids that intersect and within the selected polygon
-rupture_ids: list = fss.get_ruptures_intersecting(polygon)
+#rupture_ids: list = fss.get_ruptures_intersecting(polygon)
+rupture_ids = FilterRuptureIds(fss).for_polygon(polygon)
 rupture_ids_list=rupture_ids.tolist()
 
 #get rupture rates that are within search polygon based on logic tree opt
 
 if logic_tree_opt==1: #Use weighted rupture rates from all logic tree branches
-    rr = fss.ruptures_with_rupture_rates
+    rr = fss.model.ruptures_with_rupture_rates
     rup_info: list = rr[rr['Rupture Index'].isin(rupture_ids)]
     rup_info_list=rup_info['Rupture Index'].tolist()
 
@@ -71,7 +72,7 @@ elif logic_tree_opt==2: #Use rupture rates from specific logic tree branch
 
 #get fault sections of ruptures
 #from line 285 at: https://github.com/GNS-Science/solvis-graphql-api/blob/181a42ee119f664a7fba16ed55c067073512935a/solvis_graphql_api/composite_solution/cached.py#L246
-fsr = fss.fault_sections_with_rupture_rates
+fsr = fss.model.fault_sections_with_rupture_rates
 
 #get fault sections of intersecting ruptures
 rup_fs = fsr[fsr['Rupture Index'].isin(rupture_ids)]
@@ -91,7 +92,7 @@ def section_intersecting(fss: FaultSystemSolution, rupture_id: int):
     tmp_idx2=rup_info_list.index(rupture_id)
     
     #get surfaces of each rupture section
-    rupture_surface_gdf=fss.rupture_surface(rupture_ids[tmp_idx1])
+    rupture_surface_gdf=fss.rupture_surface(rupture_ids_list[tmp_idx1])
     rupture_sections_info=rupture_surface_gdf[['key_0','section','geometry','DipDeg','Magnitude','Area (m^2)']]
     rupture_polygon=rupture_sections_info['geometry'].tolist()
     section_dip=rupture_sections_info['DipDeg'].tolist()
@@ -149,7 +150,7 @@ def section_intersecting(fss: FaultSystemSolution, rupture_id: int):
     return weighted_rupture_area, rupture_mw, weighted_rupture_mw 
 
 
-for rid in rupture_ids[:len(rupture_ids)]:  
+for rid in rupture_ids_list[:len(rupture_ids_list)]:
     contain=section_intersecting(fss, rid)
 
 
