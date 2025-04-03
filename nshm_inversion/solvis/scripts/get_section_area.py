@@ -22,7 +22,8 @@ import numpy as np #added by JW
 import pandas as pd
 import os #added by JW
 
-from solvis import CompositeSolution, FaultSystemSolution, export_geojson
+from solvis import CompositeSolution, FaultSystemSolution
+from solvis.filter import FilterRuptureIds
 
 # load the search polygon to select ruptures
 os.chdir("..") #Go up one level in directory
@@ -42,10 +43,10 @@ os.chdir('solvis')
 fss: FaultSystemSolution = comp._solutions['CRU']  # NB this API call will change in the future
 
 # get the rupture_ids that intersect and within the selected polygon
-rupture_ids: list = fss.get_ruptures_intersecting(polygon)
+rupture_ids = FilterRuptureIds(fss).for_polygon(polygon)
 rupture_ids_list=rupture_ids.tolist()
 
-fsr = fss.fault_sections_with_rupture_rates
+fsr = fss.model.fault_sections_with_rupture_rates
 #get fault sections of intersecting ruptures
 rup_fs = fsr[fsr['Rupture Index'].isin(rupture_ids)]
 
@@ -56,7 +57,7 @@ count=0
 #loop through each Otago rupture
 for rr in range(len(rupture_ids_list)):
 #for rr in range(10):       
-    rupture_surface_gdf=fss.rupture_surface(rupture_ids[rr])
+    rupture_surface_gdf=fss.rupture_surface(rupture_ids_list[rr])
     rupture_sections_info=rupture_surface_gdf[['key_0','section','geometry','DipDeg']]
     rupture_polygon=rupture_sections_info['geometry'].tolist()
     section_dip=rupture_sections_info['DipDeg'].tolist()
