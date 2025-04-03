@@ -19,7 +19,7 @@ from solvis.filter import FilterRuptureIds
 #Set logic tree exploration option
 # 1 = weighted mean rates from all branches
 # 2 = select certain branch
-logic_tree_opt=1
+logic_tree_opt=2
 
 #select branch. 
 if logic_tree_opt==2:
@@ -61,13 +61,14 @@ if logic_tree_opt==1: #Use weighted rupture rates from all logic tree branches
 
     
 elif logic_tree_opt==2: #Use rupture rates from specific logic tree branch
-    cr = fss.composite_rates 
+    cr = fss.solution_file.composite_rates 
     #select rupture rates by logic tree branch
     rup_info=cr[(cr["Rupture Index"].isin(rupture_ids)) & (cr.solution_id==branch)]
     rup_info_list=rup_info['Rupture Index'].tolist()  
+
     #select only rupture ids that are in logic tree branch solution
-    rupture_ids=rupture_ids[rupture_ids.isin(rup_info_list)]
-    rupture_ids_list=rupture_ids.tolist()
+    rupture_ids = rupture_ids.intersection(set(rup_info_list))
+    rupture_ids_list= list(rupture_ids)
 
 
 #get fault sections of ruptures
