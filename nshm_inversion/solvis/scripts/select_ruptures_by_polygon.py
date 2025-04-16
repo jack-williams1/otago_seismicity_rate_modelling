@@ -1,7 +1,6 @@
 ##### SELECT 2022 NSHM RUPTURE SETS THAT INTERSECT AND WITHIN SEARCH POLYGON ######
 ### THEN RETURN THE RUPTURES'S MOMENT MAGNITUDE THAT IS RELEASED WITHIN THE POLOGON ###
 
-import nzshm_model as nm
 import json
 import pathlib
 
@@ -11,80 +10,13 @@ from shapely.geometry.polygon import Polygon
 from shapely.ops import transform #added by JW
 import pyproj #added by JW
 import numpy as np #added by JW
-import os #added by JW
+import os
 
-from solvis import CompositeSolution, FaultSystemSolution
+from solvis import InversionSolution
 from solvis.filter import FilterRuptureIds
 
-#Set logic tree exploration option
-# 1 = weighted mean rates from all branches
-# 2 = select certain branch
-logic_tree_opt=2
+def section_intersecting(soln: InversionSolution, rupture_id: int, rupture_ids_list, rup_info_list):
 
-#select branch. 
-if logic_tree_opt==2:
-    #uncomment to print branch options
-    #ref_table=open("nshm_logictreebranch_lookuptable.txt",'r')
-    #branch_ref_table=ref_table.read()
-    #print(branch_ref_table) 
-    branch="U2NhbGVkSW52ZXJzaW9uU29sdXRpb246MTIwNzUz"
-
-
-# load the search polygon to select ruptures
-os.chdir("..") #Go up one level in directory
-os.chdir("..") #Go up one level in directory
-geojson = json.load(open('gis_files/orb_area_polygon.geojson'))
-polygon: Polygon = shape(geojson['features'][0]['geometry'])
-
-# load the model
-os.chdir('nshm_inversion')
-slt = nm.get_model_version("NSHM_v1.0.4").source_logic_tree
-comp = CompositeSolution.from_archive("NSHM_v1.0.4_CompositeSolution.zip", slt)
-
-#Go back to solvis directory
-os.chdir('solvis')
-
-# get the crustal fault solutions
-fss: FaultSystemSolution = comp._solutions['CRU']  # NB this API call will change in the future
-
-# get the rupture_ids that intersect and within the selected polygon
-#rupture_ids: list = fss.get_ruptures_intersecting(polygon)
-rupture_ids = FilterRuptureIds(fss).for_polygon(polygon)
-rupture_ids_list=rupture_ids.tolist()
-
-#get rupture rates that are within search polygon based on logic tree opt
-
-if logic_tree_opt==1: #Use weighted rupture rates from all logic tree branches
-    rr = fss.model.ruptures_with_rupture_rates
-    rup_info: list = rr[rr['Rupture Index'].isin(rupture_ids)]
-    rup_info_list=rup_info['Rupture Index'].tolist()
-
-    
-elif logic_tree_opt==2: #Use rupture rates from specific logic tree branch
-    cr = fss.solution_file.composite_rates 
-    #select rupture rates by logic tree branch
-    rup_info=cr[(cr["Rupture Index"].isin(rupture_ids)) & (cr.solution_id==branch)]
-    rup_info_list=rup_info['Rupture Index'].tolist()  
-
-    #select only rupture ids that are in logic tree branch solution
-    rupture_ids = rupture_ids.intersection(set(rup_info_list))
-    rupture_ids_list= list(rupture_ids)
-
-
-#get fault sections of ruptures
-#from line 285 at: https://github.com/GNS-Science/solvis-graphql-api/blob/181a42ee119f664a7fba16ed55c067073512935a/solvis_graphql_api/composite_solution/cached.py#L246
-fsr = fss.model.fault_sections_with_rupture_rates
-
-#get fault sections of intersecting ruptures
-rup_fs = fsr[fsr['Rupture Index'].isin(rupture_ids)]
-#rup_fs.to_csv("WORK/otago_fault_sections.csv") #Uncomment to write fault section csv file
-
-#set dummy variables 
-rupture_mw=[0] * len(rupture_ids) 
-weighted_rupture_area=[0] * len(rupture_ids) 
-weighted_rupture_mw=[0] * len(rupture_ids) 
-
-def section_intersecting(fss: FaultSystemSolution, rupture_id: int):
     
     #get index of intersecting rupture
     #Rupture Index in rupture_ids and rup_info are NOT in the same order
@@ -93,7 +25,8 @@ def section_intersecting(fss: FaultSystemSolution, rupture_id: int):
     tmp_idx2=rup_info_list.index(rupture_id)
     
     #get surfaces of each rupture section
-    rupture_surface_gdf=fss.rupture_surface(rupture_ids_list[tmp_idx1])
+    #rupture_surface_gdf=fss.rupture_surface(rupture_ids[tmp_idx1])
+    rupture_surface_gdf=soln.rupture_surface(rupture_ids_list[tmp_idx1])
     rupture_sections_info=rupture_surface_gdf[['key_0','section','geometry','DipDeg','Magnitude','Area (m^2)']]
     rupture_polygon=rupture_sections_info['geometry'].tolist()
     section_dip=rupture_sections_info['DipDeg'].tolist()
@@ -150,23 +83,65 @@ def section_intersecting(fss: FaultSystemSolution, rupture_id: int):
     
     return weighted_rupture_area, rupture_mw, weighted_rupture_mw 
 
+logic_tree_branches = {
+    "geol_b0.823": "SW52ZXJzaW9uU29sdXRpb246MTEzMDUz",
+    "geol_b0.959": "SW52ZXJzaW9uU29sdXRpb246MTEzMDMy",
+    "geol_b1.089": "SW52ZXJzaW9uU29sdXRpb246MTEzMDM5",
+    "geod_b0.823": "SW52ZXJzaW9uU29sdXRpb246MTEzMDY3",
+    "geod_b0.959": "SW52ZXJzaW9uU29sdXRpb246MTEzMDgw",
+    "geod_b1.089": "SW52ZXJzaW9uU29sdXRpb246MTEzMDYz",
+}
 
-for rid in rupture_ids_list[:len(rupture_ids_list)]:
-    contain=section_intersecting(fss, rid)
 
+
+# ================ MODIFY THESE LINES ================ 
+# set your path
+work_dir = pathlib.Path("WORK/")
+output_dir= pathlib.Path("OtagoFaults/")
+# select branch
+branch = "geod_b0.823"
+# ================ MODIFY THESE LINES ================ 
+
+soln_id = logic_tree_branches[branch]
+
+# load the search polygon to select ruptures
+
+os.chdir("..") #Go up one level in directory
+os.chdir("..") #Go up one level in directory
+geojson = json.load(open('gis_files/orb_area_polygon.geojson'))
+polygon: Polygon = shape(geojson['features'][0]['geometry'])
+
+os.chdir("nshm_inversion/solvis") 
+
+# load the inversion solution
+soln_filepath = work_dir / f"{soln_id}.zip"
+soln = InversionSolution.from_archive(soln_filepath)
+
+
+# get the rupture_ids that intersect and within the selected polygon
+rupture_ids = FilterRuptureIds(soln).for_polygon(polygon)
+rupture_ids_list=rupture_ids.tolist()
+
+# ruptures = soln.model.ruptures_with_rupture_rates
+rr = soln.model.ruptures_with_rupture_rates
+rup_info: list = rr[rr['Rupture Index'].isin(rupture_ids)]
+rup_info_list=rup_info['Rupture Index'].tolist()
+
+#set dummy variables 
+rupture_mw=[0] * len(rupture_ids_list) 
+weighted_rupture_area=[0] * len(rupture_ids_list) 
+weighted_rupture_mw=[0] * len(rupture_ids_list) 
+
+#for rid in rupture_ids[:len(rupture_ids)]: 
+for rid in rupture_ids_list[:len(rupture_ids_list)]:    
+    contain=section_intersecting(soln, rid, rupture_ids_list, rup_info_list)
 
 #Reshape rows in contain to columns and add to new rup_info_w dataframe
 rup_info_w=rup_info.assign(weighted_area=np.reshape(contain[0:1],(len(rupture_ids),1)))
 rup_info_w=rup_info_w.assign(magnitude=np.reshape(contain[1:2],(len(rupture_ids),1)))
 rup_info_w=rup_info_w.assign(weighted_magnitude=np.reshape(contain[2:],(len(rupture_ids),1)))
 
-#Return rupture info in .csv file
-if logic_tree_opt ==1:
-    rup_info_w.to_csv("WORK/otago_ruptures_weighted.csv") #Uncomment to write csv file
-elif logic_tree_opt ==2:
-    filename_list=["WORK/otago_ruptures_" + branch + ".csv"]
-    tmp_str=""
-    filename=tmp_str.join(filename_list)
-    rup_info_w.to_csv(filename)
+ruptures_csv_filename = f"{soln_id}_Mmod_Rtrim.csv"
+ruptures_csv_filepath = output_dir / ruptures_csv_filename
+rup_info_w.to_csv(ruptures_csv_filepath)
     
-#print(rup_info_w)
