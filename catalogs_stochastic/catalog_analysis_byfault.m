@@ -44,10 +44,10 @@ load catalog_weibull
 %% MFD for particular fault or multifault
 
 %Select fault by (1) NZCFM ID or (2) Combined ID
-select_opt=2;
+select_opt=1;
 
-%ff=184; %NZCFM ID for Akatore
-ff=30; %Combined ID for Dunstan
+ff=184; %NZCFM ID for Akatore
+%ff=30; %Combined ID for Dunstan
 
 if select_opt==1
     f_indx=find(orb_faults.OBJECTID==ff); syncat_opt=1; indx_opt=0;
@@ -283,6 +283,3 @@ if select_opt==2
 else
     set(gcf,'Position',[562 457 691 364]);
 end
-
-
-
