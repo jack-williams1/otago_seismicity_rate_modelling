@@ -31,9 +31,9 @@ catalog_stochastic/plot_catalog_comparison.m: Provides capability to plot multip
 
 catalog_stochastic/plot_emptycounts.m: For each stochastic event catalog, plot number of 70-year catalog samples with zero events. Figure arranged, so each plot shows the same aperiodicity value, but different renewal processes and on-fault MFDs. Equivalent to Figure 10 in manuscript. Requires catlaog_analysis.m to have been run for all catalogs prior to plotting.
 
-catalog_stochastic/plot_intertimes.m: Plots interevent times and hazard functions for fault ff in different stochastic catalogs. Used for Figure S9 in manuscript.
+catalog_stochastic/plot_intertimes.m: Plots interevent times and hazard functions for fault ff in different stochastic catalogs. Used for Figure S10 in manuscript.
 
-catalogs_stochastic/plot_recurrence_model.m: Compare median MFDs for multiple faults from Young and Coppersmith (1985) recurrence models (e.g., Figure 2c in manuscript), and compare all MFD's for a single fault from exploring all b-value M-max combinations (e.g., Figure S8).
+catalogs_stochastic/plot_recurrence_model.m: Compare median MFDs for multiple faults from Young and Coppersmith (1985) recurrence models (e.g., Figure 2c in manuscript), and compare all MFD's for a single fault from exploring all b-value M-max combinations (e.g., Figure S9).
 
 ## REFERENCE
 
@@ -49,8 +49,6 @@ catalogs_stochastic/plot_recurrence_model.m: Compare median MFDs for multiple fa
 -Seebeck, H., R. J. Van Dissen, N. J. Litchfield, P. M. Barnes, A. Nicol, R. M. Langridge, D. J. A. Barrell, P. Villamor, S. M. Ellis, M. S. Rattenbury, et al. (2022). New Zealand Community Fault Model–version 1.0, GNS Science report 2021/57, GNS Science, Lower Hutt, New Zealand, 97 pp., doi: 10.21420/GA7S-BS61.
 
 -Seebeck, H., Van Dissen, R., Litchfield, N., Barnes, P. M., Nicol, A., Langridge, R., ... & Lee, J. (2024). The New Zealand Community Fault Model–version 1.0: An improved geological foundation for seismic hazard modelling. New Zealand Journal of Geology and Geophysics, 67(2), 209-229.
-
--Tinti, S., & Mulargia, F. (1987). Confidence intervals of b values for grouped magnitudes. Bulletin of the Seismological Society of America, 77(6), 2125-2134.
 
 -Yakovlev, G., Turcotte, D. L., Rundle, J. B., & Rundle, P. B. (2006). Simulation-based distributions of earthquake recurrence times on the San Andreas fault system. Bulletin of the Seismological Society of America, 96(6), 1995-2007.
 
