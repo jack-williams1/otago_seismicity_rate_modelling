@@ -30,6 +30,7 @@ fntsize=9;  all_mag_range_GR=Mmin:dm:Mmax;
 if model_opt==4
     tmp_label_opt='Geodetic Model';
     load('model4/otago_geodetic_slip_rates');
+    %Note fault areas have already had 80% correction factor applied
     input_mo_rate=orb_faults.Area_m2.*orb_sliprates.*3*10^10*10^-3;
 else
     tmp_label_opt='NZ CFM';
@@ -128,10 +129,11 @@ set(gcf,'Position',[680 130 965 847]);
 runs1=1;
 
 
-%% Compare all stochastic catalogs MFD (for a given aperiodicity)
+%% Compare all stochastic catalogs MFD
 
 figure(4);
 
+%plot stochastic catalog (Poisson only)
 line_cols=['k','r','m']; leg_col=vertcat([0 0 0],[1 0 0],[1 0 1]);
 marker_style=["^","v","*"]; 
                 
@@ -163,7 +165,7 @@ lineh3 = findobj(objh(11:12),'type','line'); set(lineh3,'MarkerSize',0.1); set(l
 linei = findobj(objh(13:18),'type','line'); set(linei,'Color',[0.5 0.5 0.5],'MarkerEdgeColor',[0.5 0.5 0.5]);
 
 xlabel('Magnitude'); ylabel('Annual frequency of exceedance'); grid on; axis square;
-xlim([Mmin Mmax]); ylim([10^-5 5*10^-2]); 
+xlim([Mmin Mmax]); ylim([2*10^-5 5*10^-2]); 
 
 
 %% Compare RSQSim and Stochastic Event Catalogs Interoccurrence times
@@ -281,7 +283,6 @@ nexttile
 
 %Plot magnitude counts as bar plots
 
-
 yyaxis right;  
 
 h1=bar(tmp_mag_range,mag_counts); 
@@ -293,13 +294,12 @@ ylim([0 1]); ylabel('mag count (normalizied)'); set(gca,'YColor',[0 0 0]);
 yyaxis left;
 
 %plot weighted mean IFM solution MFD and weighted geologic results
-semilogy(mag_range_nshm2022,w_mag_rate,'k-','LineWidth',1.5,'LineStyle','-'); hold on
-semilogy(mag_range_nshm2022,geo_b_mag_rate(:,4),'Color',[0.4 0.4 0.4],'LineWidth',1.5,'LineStyle','-'); hold on
+semilogy(mag_range_nshm2022,geo_w_mag_rate(:,2),'Color',[0.4 0.4 0.4],'LineWidth',1.5,'LineStyle','-'); hold on
 
 %plot rsqsim catalog
 semilogy(rsqsim_mag_range,rsqsim_partial_mfd_rate,'r-','LineWidth',1.5); hold on
 
-legend({'IFM weighted geologic','RSQSim','IFM mag count','RSQsim mag count'},'Location','southoutside');
+legend({'IFM weighted geologic','RSQSim','IFM mag count','RSQsim mag count'},'Location','Northeast');
 
 xlim([tmp_mag_range(1)-0.05 tmp_mag_range(end)]); ylim([5*10^-6 7*10^-3]);
 
@@ -307,7 +307,6 @@ xlabel('Magnitude'); set(gca,'YColor',[0 0 0]);
 ylabel('Annual rate of exceedance'); set(gca,'FontSize',fntsize); axis square; grid on
 
 set(gcf, 'Position',[218 203 515 515])
-
 
 t2=title('(a)','fontsize',fntsize+3,'fontweight','normal');
 set(t2, 'horizontalAlignment', 'left');
@@ -317,8 +316,7 @@ set(t2, 'position', [-0.15 h2(2) h2(3)]);
 
 nexttile
 
-semilogy(mag_range_nshm2022,w_mag_rate,'k-','LineWidth',1.5); hold on
-semilogy(mag_range_nshm2022,geo_b_mag_rate(:,4),'LineWidth',1.5,'Color',[0.4 0.4 0.4]); hold on
+semilogy(mag_range_nshm2022,geo_w_mag_rate(:,2),'LineWidth',1.5,'Color',[0.4 0.4 0.4]); hold on
 semilogy(rsqsim_mag_range,rsqsim_partial_mfd_rate,'r-','LineWidth',1.5); hold on
 
 %plot stochastic catalog (Poisson only)
@@ -330,7 +328,7 @@ end
 
 axis([tmp_mag_range(1)-0.05 tmp_mag_range(end) 5*10^-6 7*10^-3]);
 
-legend({'IFM weighted all','IFM weighted geologic','RSQsim','segmented-char','combined-char','combined-GR'},'Location','Southoutside');
+legend({'IFM weighted geologic','RSQsim','segmented-char','combined-char','combined-GR'},'Location','Southoutside');
 
 xlabel('Magnitude');ylabel('Annual rate of exceedance'); set(gca,'FontSize',fntsize); axis square; grid on
 
@@ -415,7 +413,7 @@ set(gcf,'Position',[440 459 708 338]);
 %% Plot URZ forecasts with RSQSim and Stochastic Event Catalog
 
 col_opt=vertcat([1,0.5,0],[0 0 1],[0.2 0.8 0.2]);
-rate_count=zeros(3,1); runs2=0;
+rate_count=zeros(3,1); runs2=0; fntsize=10;
 
 figure(8);
 
@@ -529,8 +527,7 @@ end
 ylabel('Annual frequency of exceedance'); xlabel('Magnitude');xlim([5 8]); ylim([5*10^-5 2]);
 set(gca,'fontsize',fntsize+1);
 legend([p1(1), p1(2), p2],{['URZ-negbinom, rate test: ', num2str(rate_count(1),3),'%'],...
-        ['URZ-poi, rate test: ',num2str(rate_count(2),2),'%'],...
-        ['hybrid, rate test: ',num2str(rate_count(3),2),'%'],'RSQSim',...
+        ['URZ-poi, rate test: ',num2str(rate_count(2),2),'%'],'RSQSim',...
 },'location','northeast','fontsize',fntsize-1)
 axis square; grid on
 
@@ -571,13 +568,12 @@ set(t1, 'position', [-0.15 h1(2) h1(3)]);
 
 set(gcf,'Position', [440 126 653 572]); runs3=1;
 
-
 %% Plot (a) NSHM with paleoseismic constraints and (b) RSQSim and stochastic event catlogs
 
 %Note model_opt should be set to 2
 load('catalogs_stochastic/model2/catalog_poi_10kyr_samples')
 
-inc_mo_rate=zeros(length(mag_range_nshm2022_combined)-1,3);
+inc_mo_rate=zeros(length(mag_range_nshm2022_combined)-1,2);
 
 for jj=1:length(mag_range_nshm2022_combined)-1
     mag_inc_rate=nshm2022_combined_rate(jj,:)-nshm2022_combined_rate(jj+1,:);
@@ -593,26 +589,26 @@ tiledlayout(1,2,"TileSpacing","compact");
 nexttile
 
 %plot NSHM inversion MFD (NOT combined with URZ)
-semilogy(mag_range_nshm2022,w_mag_rate,'LineWidth',1,'Color',[0 0 0]);hold on %weighted rupture rates
-semilogy(mag_range_nshm2022,geo_b_mag_rate(:,4),'LineWidth',1,'Color',[0.4 0.4 0.4 0.5]);hold on %rupture rates for weighed geologic rates
+semilogy(mag_range_nshm2022,geo_w_mag_rate(:,2),'LineWidth',1,'Color',[0 0 0 0.5]);hold on %rupture rates for weighed geologic rates
+semilogy(mag_range_nshm2022,ged_w_mag_rate(:,2),'LineWidth',1,'Color',[1 0 1 0.5]);hold on %rupture rates for weighed geodetic rates
 
 %plot NSHM URZ (negative binomial model)
 semilogy(urz_mag_range,urz_mag_rate(:,1),'LineWidth',1.5,'Color',[0.6 0 0.6]);hold on;
 
 %plot NSHM inversion MFD (combined rates with URZ)
-semilogy(mag_range_nshm2022_combined,nshm2022_combined_rate(:,1),'LineWidth',1.5,'Color',[0 0 0]);hold on %combined weighted rupture rates
-semilogy(mag_range_nshm2022_combined,nshm2022_combined_rate(:,2),'LineWidth',1.5,'Color',[0.4 0.4 0.4]);hold on %combined rupture rates for weighed geologic rates
+semilogy(mag_range_nshm2022_combined,nshm2022_combined_rate(:,1),'LineWidth',1.5,'Color',[0 0 0]);hold on %combined weighted geologic rates
+semilogy(mag_range_nshm2022_combined,nshm2022_combined_rate(:,2),'LineWidth',1.5,'Color',[1 0 1]);hold on %combined rupture rates for weighed geodetic rates
 
 %Errorbar estimate from paleoseismology constraint as derived through otago_eq_timings_simulations with 95% uncertainity
 errorbar(paleoseismic_mag_constraint(:,1),(paleoseismic_rate_constraint(:,1)/time_window_length),(2*paleoseismic_rate_constraint(:,2)/time_window_length),(2*paleoseismic_rate_constraint(:,2)/10000),...
     paleoseismic_mag_constraint(:,2),paleoseismic_mag_constraint(:,2),"o","MarkerFaceColor",[1 1 1],'LineWidth',1.5,...
     'Color',[0.3 0.3 0.3],"MarkerEdgeColor",[0.3 0.3 0.3]);
 
-legend({['IFM weighted', newline, 'mean: ', num2str(ifm_otago_fault_stats{1}(3),3), ' Nm/yr'],...
-    ['IFM weighted', newline, 'geologic mean ', num2str(ifm_otago_fault_stats{2}(4,3),3), ' Nm/yr'],...
+legend({['IFM weighted', newline, 'geologic mean: ', num2str(ifm_otago_fault_stats{1}(3),3), ' Nm/yr'],...
+    ['IFM weighted', newline, 'geodetic mean ', num2str(ifm_otago_fault_stats{2}(3),3), ' Nm/yr'],...
     ['URZ (negbinom): ', num2str(urz_mo_rate(1),3), ' Nm/yr'],...
-    ['URZ-IFM wm', newline, 'combined: ', num2str(sum(inc_mo_rate(:,1)),3), ' Nm/yr'],...
-    ['URZ-IFM geol', newline, 'combined: ', num2str(sum(inc_mo_rate(:,2)),3), ' Nm/yr'],...
+    ['URZ-IFM geol', newline, 'combined: ', num2str(sum(inc_mo_rate(:,1)),3), ' Nm/yr'],...
+    ['URZ-IFM geod', newline, 'combined: ', num2str(sum(inc_mo_rate(:,2)),3), ' Nm/yr'],...
     ['paleoseismic rate']},'Location','northeast','Fontsize',fntsize-3);hold on;
 
 xlabel('Magnitude'); ylabel('Annual frequency of exceedance'); xlim([6.5,8.1]); ylim([10^-5 2*10^-2]); 
@@ -714,16 +710,14 @@ semilogy(rsqsim_mag_range,rsqsim_partial_mfd_rate,'r-','LineWidth',1.5); hold on
 
 %plot NSHM inversion MFD (NOT combined with URZ)
 %semilogy(mag_range_nshm2022,w_mag_rate,'k-','LineWidth',1.5);hold on %weighted rupture rates
-semilogy(mag_range_nshm2022,geo_b_mag_rate(:,4),'LineWidth',1.5,'Color',[0.4 0.4 0.4]);hold on %rupture rates for weighted geologic mean
+semilogy(mag_range_nshm2022,geo_w_mag_rate(:,2),'LineWidth',1.5,'Color',[0.4 0.4 0.4]);hold on %rupture rates for weighted geologic mean
 
-%plot NSHM DSM (for negative binomial URZ)
+%plot NSHM URZ (for negative binomial)
 semilogy(urz_mag_range,urz_mag_rate(:,1),'LineWidth',1.5);hold on;
 
 %Uncomment, and change legend option if want to plot this instead
 %plot NSHM inversion MFD (combined rates with URZ)
-semilogy(mag_range_nshm2022_combined,nshm2022_combined_rate(:,1),'Color',[0.5 0 1],'LineWidth',1.5);hold on %weighted rupture rates
-semilogy(mag_range_nshm2022_combined,nshm2022_combined_rate(:,2),'b-','LineWidth',1.5);hold on %rupture rates for central geologic mean
-
+semilogy(mag_range_nshm2022_combined,nshm2022_combined_rate(:,1),'Color',[0.5 0 1],'LineWidth',1.5);hold on %weighted geologic rupture rates
 
 %Errorbar estimate from paleoseismology constraint as derived through otago_eq_timings_simulations with 95% uncertainity
 errorbar(7,(paleoseismic_rate_constraint(:,1)/10000),(2*paleoseismic_rate_constraint(:,2)/10000),(2*paleoseismic_rate_constraint(:,2)/10000),0.2,0.2,...
@@ -744,8 +738,7 @@ legend({['segmented-char-poi: ',num2str(MoRate_StochasticEventCatalog_all_poi(1)
     ['combined-char-poi: ', num2str(MoRate_StochasticEventCatalog_all_poi(2),3), ' Nm/yr'],...
     ['combined-GR-poi: ', num2str(MoRate_StochasticEventCatalog_all_poi(3),3), ' Nm/yr'],...
     ['RSQSim: ', num2str(rsqsim_MoRate_catalog,3), ' Nm/yr'],...
-    ['2022 NSHM inversion', newline, 'weighted mean: ', num2str(ifm_otago_fault_stats{1}(3),3), ' Nm/yr'],...
-    ['2022 NSHM inversion', newline, 'geologic dm: ', num2str(ifm_otago_fault_stats{2}(4,3),3), ' Nm/yr'],...
+    ['2022 NSHM inversion', newline, 'geologic dm: ', num2str(ifm_otago_fault_stats{1}(3),3), ' Nm/yr'],...
     ['2022 NSHM URZ: ', num2str(urz_mo_rate(1),3), ' Nm/yr'],...
     ['2022 NSHM combined: ', num2str(sum(inc_mo_rate(:,1)),3), ' Nm/yr'],...
     ['10 kyr paleoseismic rate'],...
@@ -756,7 +749,7 @@ legend({['segmented-char-poi: ',num2str(MoRate_StochasticEventCatalog_all_poi(1)
 xlabel('Magnitude'); ylabel('Annual frequency of exceedance'); grid on; axis square;
 set(gcf,'Position',[680 496 611 481]);
 
-%% Plot to illustrate moment rate reduction associated with area weighted moment
+%% Supp plot to illustrate moment rate reduction associated with area weighted moment
 
 figure(11);
 
@@ -764,11 +757,11 @@ tiledlayout(2,2,'TileSpacing','compact');
 
 nexttile
 
-semilogy(mag_range_nshm2022,mag_rate,'r-','LineWidth',1.2);hold on
-semilogy(mag_range_nshm2022,w_mag_rate,'k-','LineWidth',1.2);
+semilogy(mag_range_nshm2022,geo_w_mag_rate(:,1),'r-','LineWidth',1.2);hold on
+semilogy(mag_range_nshm2022,geo_w_mag_rate(:,2),'k-','LineWidth',1.2);
 
-legend('All IFM ruptures','Scaled by area within Otago')
-axis([6.9 8.2  5*10^-6 5*10^-3]);
+legend('Unscaled magnitudes','Scaled by area within Otago')
+axis([6.8 8.2  5*10^-6 5*10^-3]);
 
 xlabel('Magnitude');ylabel('Annual rate of exceedance'); axis square; grid on
 
@@ -802,75 +795,75 @@ set(t1, 'position', [-0.15 h1(2) h1(3)]);
 
 col_opt=vertcat([0 0 1],[1 0 1],[1,0.5,0],[0.2 0.5 0.2]);
 
-title_opt=["(c)","(d)"]; txt_opt=["geol weighted mean","geod weighted mean"];
+title_opt=["(c)","(d)"]; 
 tmp_width=[1 1 1 1.5];
 
-tmp_mag_range=[6.9:0.1:mag_range_nshm2022(end)-0.4]; 
+tmp_mag_range=[6.8:0.1:mag_range_nshm2022(end)+0.1]; 
+
+txt_opt=["geol weighted mean","dm geologic bN[0.823, 2.7]","dm geologic bN[0.959, 3.4]","dm geologic bN[1.089, 4.6]", ...
+    "geod weighted mean","dm geodetic bN[0.823, 2.7]","dm geodetic bN[0.959, 3.4]","dm geodetic bN[1.089, 4.6]"];
 
 for hh=1:2
-    
+
+    nexttile
+
+    yyaxis right
 
     if hh==1 %plot geologic rates
-        tmp_rates=geo_b_mag_rate; tmp_branch_indx=geo_branch_indx; tmp_branch_rupture_rates=geo_branch_rupture_rates;
+        tmp_rates=geo_w_mag_rate; tmp_branch_rates=geo_branch_rupture_rates; count=1;
     else    %plot geodetic rates
-        tmp_rates=ged_b_mag_rate; tmp_branch_indx=ged_branch_indx; tmp_branch_rupture_rates=ged_branch_rupture_rates;
+        tmp_rates=ged_w_mag_rate; tmp_branch_rates=ged_branch_rupture_rates; count=5;
     end
     
-    nexttile
-    
-    yyaxis right
-    
-    mag_counts=zeros(length(tmp_mag_range),length(num_branches));
+    mag_counts=zeros(length(tmp_mag_range),num_branches);
 
-    for kk=1:length(tmp_mag_range)-1
-        
-        for ii=1:num_branches
-        
-            total_rup_rate=sum(tmp_branch_rupture_rates{ii}.AnnualRate);
+    for ii=1:num_branches
+       
+        total_branch_rate=sum(tmp_branch_rates{ii}.AnnualRate);
 
-            %find number of rupture magnitudes in each bin
-            mag_indx=find(tmp_branch_rupture_rates{ii}.magnitude>tmp_mag_range(kk) & tmp_branch_rupture_rates{ii}.magnitude<tmp_mag_range(kk+1));
+        for kk=1:length(tmp_mag_range)-1
+            %find incremental number of rupture magnitudes in each bin
+            mag_indx1=find(tmp_branch_rates{ii}.magnitude>tmp_mag_range(kk) & tmp_branch_rates{ii}.magnitude<tmp_mag_range(kk+1));
 
             %weight magnitude count by rupture rate
-            if isempty(mag_indx)==0
-                mag_counts(kk,ii)=length(mag_indx)*sum(tmp_branch_rupture_rates{ii}.AnnualRate(mag_indx))/total_rup_rate;
+            if isempty(mag_indx1)==0
+                mag_counts(kk,ii)=length(mag_indx1)*sum(tmp_branch_rates{ii}.AnnualRate(mag_indx1))/total_branch_rate;
             end
 
-        end %end ii loop for branches
-    end %end kk loop for mag_count
+        end %end kk loop for mag count
+
+    end %end ii loop for branches
 
     b1=bar(tmp_mag_range,mag_counts,'stacked');
+
     alphaValue = 0.3; set(b1, 'FaceAlpha', alphaValue);
     
     b1(1).FaceColor=col_opt(1,:); b1(2).FaceColor=col_opt(2,:); b1(3).FaceColor=col_opt(3,:);
 
-    ylabel('Weighted Count'); set(gca,'YColor',[0 0 0]);
+    ylabel('Weighted Count'); set(gca,'YColor',[0 0 0]); hold off;
 
     yyaxis left
 
-    semilogy(mag_range_nshm2022,w_mag_rate,'k-','LineWidth',1.5,'LineStyle','-'); hold on
-    tmp_txt=cell(num_branches,1);
+    %plot weighted mean rates from geologic or geodetic branches
+    semilogy(mag_range_nshm2022,tmp_rates(:,2),'k-','LineWidth',1.5,'LineStyle','-'); hold on
+    
+    for ii=1:num_branches
 
-    legend_txt=["weighted mean rupture rates"];
-    
-    for ii=1:num_branches+1
-    
-        semilogy(mag_range_nshm2022,tmp_rates(:,ii),'Color',col_opt(ii,:),'LineWidth',tmp_width(ii),'LineStyle','-','Marker', 'none'); hold on
-        %obtain deformation model, B-n pair, and weighting for each branch
-        if ii<=num_branches
-            tmp_txt{ii}=strjoin({cell2mat(logic_tree_branches.deformation_model(tmp_branch_indx(ii),:)),...
-                cell2mat(logic_tree_branches.bN_pair(tmp_branch_indx(ii),:)),num2str(b_weight(ii))},' ');
-        else
-            tmp_txt{ii}=txt_opt(hh);
+        branch_rate=zeros(length(mag_range_nshm2022),1);
+
+        for kk=1:length(mag_range_nshm2022)
+            mag_indx2=find(tmp_branch_rates{ii}.magnitude>mag_range_nshm2022(kk));
+            if isempty(mag_indx2)==0
+                branch_rate(kk)=sum(tmp_branch_rates{ii}.AnnualRate(mag_indx2));
+            end
         end
 
-    legend_txt=[legend_txt,tmp_txt{ii}];
-    
+        semilogy(mag_range_nshm2022,branch_rate,'Color',col_opt(ii,:),'LineWidth',1.5,'LineStyle','-'); hold on 
     end
 
-    legend(legend_txt,'Location','southoutside','fontsize',8);
+    legend(txt_opt(count:count+3),'Location','southoutside','fontsize',8);
 
-    axis([6.8 8 5*10^-6 7*10^-3]); set(gca,'YColor',[0 0 0]);
+    axis([tmp_mag_range(1) tmp_mag_range(end) 5*10^-6 5*10^-3]); set(gca,'YColor',[0 0 0]);
 
     xlabel('Magnitude');ylabel('Annual rate of exceedance'); axis square; grid on
 
