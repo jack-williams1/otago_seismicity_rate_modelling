@@ -34,7 +34,7 @@ col_opt=vertcat([0.87 0.32 0.08],[0.33 0.85 0.25]);
 marker_style=["*","v"]; p2=[]; p3=[];
 
 %Plot median magnitude-frequency distributions for multiple faults
-%conisiders both characteristic and G-R if combined source
+%considers both characteristic and G-R if combined source
 
 figure(1);
 
