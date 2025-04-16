@@ -14,12 +14,18 @@ for ii=1:length(model_opt)
    
     nexttile
 
-    model_path=strcat('model',num2str(model_opt(ii)));
-    addpath(model_path)
-    
     empty_count=zeros(length(intertime_txt),3);
 
     for jj=1:3  %loop through renewal processes
+
+        if jj==1 %Poisson model only every needs to look at model2
+            model_path=strcat('model',num2str(model_opt(2)));
+            addpath(model_path)
+        else
+             model_path=strcat('model',num2str(model_opt(ii)));
+             addpath(model_path);
+        end
+
         load(strcat('catalog_',intertime_txt(jj),'_statistics'),strcat('sampleMoRate_',intertime_txt(jj)));
         samples=eval(strcat('sampleMoRate_',intertime_txt(jj)));
         
@@ -29,6 +35,8 @@ for ii=1:length(model_opt)
             
             
         end
+
+        rmpath(model_path) 
     end
     
     bar_cat=["seg-char poi","seg-char bpt","seg-gr wbl",...
