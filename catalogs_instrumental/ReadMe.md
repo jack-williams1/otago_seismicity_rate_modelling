@@ -8,7 +8,7 @@ Download the New Zealand integrated earthquake catalog from: https://geodata.nz/
 
 ## SCRIPTS ##
 
-catalogs_instrumental/nz_intergrated_eq_catalog.m: select events from the New Zealand integrated earthquake catalog that are located within the Otago search polygon ('gis_files/orb_area_polygon.shp'). Selects: (1) all events, (2) events 1951-2021, and (3) events 1971-2021. Options to plot MFD, models catalog G-R relationship using maximum likelihood function: GRrelation_MLEWeichert_EQMATca.m (Tinti and Mulargia 1987), return sampled catalog as .mat variable and csv file. These output files are needed for subsequent analysis in all_catalog_comparison.m
+catalogs_instrumental/nz_integrated_eq_catalog.m: select events from the New Zealand integrated earthquake catalog that are located within the Otago search polygon ('gis_files/orb_area_polygon.shp'). Selects: (1) all events, (2) events 1951-2021, and (3) events 1971-2021. Options to plot MFD, models catalog G-R relationship using maximum likelihood function: GRrelation_MLEWeichert_EQMATca.m (Tinti and Mulargia 1987), return sampled catalog as .mat variable and csv file. These output files are needed for subsequent analysis in all_catalog_comparison.m
 
 ## REFERENCES ##
 
