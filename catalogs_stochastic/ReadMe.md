@@ -31,9 +31,9 @@ catalog_stochastic/plot_catalog_comparison.m: Provides capability to plot multip
 
 catalog_stochastic/plot_emptycounts.m: For each stochastic event catalog, plot number of 70-year catalog samples with zero events. Figure arranged, so each plot shows the same aperiodicity value, but different renewal processes and on-fault MFDs. Equivalent to Figure 10 in manuscript. Requires catlaog_analysis.m to have been run for all catalogs prior to plotting.
 
-catalog_stochastic/plot_intertimes.m: Plots interevent times and hazard functions for fault ff in different stochastic catalogs. Used for Figure S10 in manuscript.
+catalog_stochastic/plot_intertimes.m: Plots interevent times and hazard functions for fault ff in different stochastic catalogs. Used for Figure S9 in manuscript.
 
-catalogs_stochastic/plot_recurrence_model.m: Compare median MFDs for multiple faults from Young and Coppersmith (1985) recurrence models (e.g., Figure 2c in manuscript), and compare all MFD's for a single fault from exploring all b-value M-max combinations (e.g., Figure S9).
+catalogs_stochastic/plot_recurrence_model.m: Compare median MFDs for multiple faults from Young and Coppersmith (1985) recurrence models (e.g., Figure 2c in manuscript), and compare all MFD's for a single fault from exploring all b-value M-max combinations (e.g., Figure S6b).
 
 ## REFERENCE
 
