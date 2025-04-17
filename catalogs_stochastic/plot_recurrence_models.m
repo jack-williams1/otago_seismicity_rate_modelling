@@ -31,9 +31,10 @@ cf_id=[31 32]; %Combined ID for Pisa-Cluden and Pisa-Grandview
 select_opt=[1 2]; 
 
 col_opt=vertcat([0.87 0.32 0.08],[0.33 0.85 0.25]); 
+marker_style=["*","v"]; p2=[]; p3=[];
 
-%Plot median magnitude-frequency distributions for fault
-%conisders both characteristic and G-R if combined source
+%Plot median magnitude-frequency distributions for multiple faults
+%considers both characteristic and G-R if combined source
 
 figure(1);
 
@@ -49,31 +50,39 @@ select_opt=ss;
 
         median_ri=(length(RecurrenceVar{f_indx})/2)+0.5;
 
-        p1=semilogy(mag_range_GR{f_indx},fm_char_var1{f_indx}(:,median_ri*3),'Color',[0.58,0.49,0.86],'LineWidth',0.5); hold on;
+        p1=semilogy(mag_range_GR{f_indx},fm_char_var1{f_indx}(:,median_ri*3),'Color',[0.58,0.49,0.86],'LineWidth',1); hold on;
 
     elseif select_opt==2
 
         load('orb_fault_combined','mag_range_GR','fm_char_var1','fm_exp_var1',...
             'RecurrenceVar','T','lambda');
 
+        
+
         for ii=1:length(cf_id)
 
             f_indx=find(orb_faults_comb.Combined_ID==cf_id(ii)); syncat_opt=[1,2]; indx_opt=1;
+            
+            marker_indicies=[1:30: length(fm_char_var1{f_indx}(:,median_ri*3))];%plot markers at increments of 30 indicies
 
-            p2=semilogy(mag_range_GR{f_indx},fm_char_var1{f_indx}(:,median_ri*3),'Color',col_opt(ii,:),'LineStyle','-','LineWidth',0.5); hold on;
-            p3=semilogy(mag_range_GR{f_indx},fm_exp_var1{f_indx}(:,median_ri*3),'Color',col_opt(ii,:),'LineStyle','-','LineWidth',0.5); hold on;
+            p2(ii)=semilogy(mag_range_GR{f_indx},fm_char_var1{f_indx}(:,median_ri*3),'Color',col_opt(ii,:),'LineStyle','-','LineWidth',1,...
+                'Marker',marker_style(ii),'MarkerIndices',marker_indicies+(ii-1)*15); hold on; %plot char MFD
+            p3(ii)=semilogy(mag_range_GR{f_indx},fm_exp_var1{f_indx}(:,median_ri*3),'Color',col_opt(ii,:),'LineStyle','-','LineWidth',1,...
+                'Marker',marker_style(ii),'MarkerIndices',marker_indicies+(ii-1)*15); hold on; %plot G-R MFD
         end
     end
 end
 
-legend([p2 p3],{'comb-char','G-R'},...
+legend([p1 p2(1) p3(1),p2(2),p3(2)],{'Pisa seg-char','Pisa-Cluden comb-char','Pisa-Cluden comb-G-R','Pisa-Grandview comb-char','Pisa-Grandview comb-G-R'},...
   'FontSize',13,'Location','southwest'); hold on;
 
- set(gca,'fontsize',11); axis([Mmin Mmax-0.2 5*10^-6 5*10^-3]); hold on;
+ set(gca,'fontsize',11); axis([Mmin Mmax-0.2 10^-6 5*10^-3]); hold on;
     xlabel('Magnitude'); ylabel('Annual frequency of exceedance'); grid on; axis square;
 
 
-%% Plot fault's mfd for all b-value and Mmax cases
+%% Plot a single fault's mfd for all b-value and Mmax cases
+
+%USED FOR FIGURE S6B IN PAPER
 
 cf_id=30;%plot for the Dunstan Fault
 

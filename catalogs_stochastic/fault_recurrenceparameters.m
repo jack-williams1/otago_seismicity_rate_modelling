@@ -37,13 +37,12 @@ elseif recurrence_model==2
 elseif recurrence_model==3
 
     orb_sliprates=[orb_faults.SR_pref];
-    aperiodicity=3;  
+    aperiodicity=4;  
 
 elseif recurrence_model==4
-    %import geodetic slip rates. Need to run
-    %nshm_geodetic_rates/extract_otago_sections.py first
+    %import geodetic slip rates
     mydir  = pwd; idcs   = strfind(mydir,'/');
-    addpath([mydir(1:idcs(end)-1),'/nshm_inversion']);
+    addpath([mydir(1:idcs(end)-1),'/nshm_geodeticrates']);
     tmp_table=readgeotable('otago_sections_geodetic_rates.geojson');
     unique_flts_id=unique(tmp_table.ParentID); orb_sliprates=zeros(length(unique_flts_id),1) ;
     
@@ -70,7 +69,9 @@ aperiodicity_opt=1; if aperiodicity_opt==2; char_alpha=2; end
 
 % segmented model
 
-orb_area=orb_faults.Area_m2;%fault area
+%fault area, note these areas have already had 80% correction factor applied in faultgeometries.m
+orb_area=orb_faults.Area_m2;
+
 %Max mag for crustal fault scaling from Stirling et al (2024)
 Mx_segmented = [log10(orb_area./10^6)+4.1,log10(orb_area./10^6)+4.2,log10(orb_area./10^6)+4.3]; 
 
@@ -127,8 +128,9 @@ Mx_combined = [log10(c_area./10^6)+4.1,log10(c_area./10^6)+4.2,log10(c_area./10^
 rigidity = 3*10^10; % N/m^2, set so consistent with 2022 NSHM (Gerstenberger et al 2024)
 Mmin = 5; Mmax=7.8;
 
-%assymetric weighting for slip rate and Mmax as higher estimates are disproportionately high
-Mmax_shift_weight = [0.2 0.7 0.1];
+%Approximate that +/-0.1 uncertainty of fault scaling coefficient 'C' is
+%equivalent to a 1 standard deviation uncertainity (see Stirling et al 2024)
+Mmax_shift_weight = [0.17 0.66 0.17];
 
 dm = 0.005;%discretized magnitude interval
 mag_range_GR={};
@@ -168,10 +170,9 @@ end
 %NZ crustal MFD (Gerstenberger et al 2024)
 b = 0.96;
 
-%random variation of b value with uncertainites from Gerstenbenger et al 2024
+%random variation of b value with uncertainites from Rollins et al 2024
 Bvalue_option = [b+0.14 b b-0.14];
-Bvalue_weight = [0.17 0.66 0.17];
-
+Bvalue_weight = [0.1 0.8 0.1];
 
 %Convert fault slip rate to m/yr
 %For combined case, also correct for rupture weighting
@@ -348,3 +349,4 @@ end %end ee loop
 variable_name3=strcat('model',num2str(recurrence_model),'/orb_fault_parameters');
 
 save(variable_name3,'num_simu','t_limit','dm','rigidity','Mmin','Mmax','aperiodicity_opt');
+

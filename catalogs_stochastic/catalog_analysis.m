@@ -63,6 +63,9 @@ for ss=1:length(StochasticEventCatalog)
     Mo_StochasticEventCatalog_all = 10.^(1.5*StochasticEventCatalog{ss}(:,4)+9.05);
     MoRate_StochasticEventCatalog_all(ss) = sum(Mo_StochasticEventCatalog_all)/(num_simu*t_limit);
     
+    %Added by JW March 2025
+    m5_rate(ss)=length(StochasticEventCatalog{ss})/num_simu;
+
     if ss==1
         num_sources=num_fault; source_id=orb_faults.OBJECTID;
         load('orb_fault_segmented','YC85SeismicMoment_char');
@@ -346,10 +349,10 @@ rand_t_indx=rand(nsim,1).*(num_simu-10000);%nsmim random numbers between 0 and n
     end %end ss loop for each catalog
 end%end gg loop for each sample
 
-end
-
 
 save(strcat('model',num2str(model_opt),'/catalog_poi_10kyr_samples'),'sampleAnnualRate_10kyr')
+end
+
 
 %% Plot stochastic catalog MFD with sub samples
 

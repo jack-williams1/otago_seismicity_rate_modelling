@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-#RUN FROM FOLDER: otago_recurrence_modelling/nshm_inversion/solvis
+#Ensure necessary packages that are imported below are installed in python environment
+#RUN FROM FOLDER nshm_inversion/solvis/scripts
+
 # -*- coding: utf-8 -*-
 """
 Created on Thu May  2 17:32:36 2024
@@ -13,7 +15,6 @@ import json
 import pyproj #added by JW
 
 import matplotlib.pyplot as plt
-import matplotlib.path as mpath
 import matplotlib.patches as mpatches
 import matplotlib.ticker as mticker
 
@@ -21,45 +22,33 @@ from shapely.geometry.polygon import Polygon
 from shapely.geometry import shape
 from shapely.ops import transform 
 
+import geopandas as gpd
 import os
-from osgeo import ogr
 
 fault_select=['Akatore','Dunstan','Pisa']
-
 
 fntsize=8
 
 #define function to get fault geometry
 def get_rup_polygons(fault_select):
-    os.chdir("..") #Go up one level in directory
-    os.chdir("..") #Go up one level in directory
-    os.chdir('mfd_analysis/by_fault')
     
-    #Go to individual fault inversion results created in nshm_otago_inversion_results_by_fault.m
-    fault_file=fault_select+'.csv'
-    fault_info=pd.read_csv(fault_file)
-    
-    #Only select ruptures from weighted mean of explored geologic logic tree branches
-    branch_indx=np.where(fault_info.iloc[:,8]>0)
-    
-    #go to directory with rupture surfaces in created from get_section_area.py
-    os.chdir("..") #Go up one level in directory
-    os.chdir("..") #Go up one level in directory
-    os.chdir("solvis/WORK/rupture_surfaces") 
-    
+    os.chdir("..")
+
+    all_fault_sec_info=pd.read_csv('OtagoFaults/fault_sections_geo_w.csv')
+    #select all ruptures that fault participates in
+    fault_rups=all_fault_sec_info[all_fault_sec_info['ParentName']==fault_select]
+        
     rupture_geom={}
-    rup_rate=[0] * len(branch_indx[0])
+    rup_rate=np.zeros((len(fault_rups),1))
     
-    for ii in range(len(branch_indx[0])):
-        rup_str='rupture_surface_'+str(fault_info.iloc[branch_indx[0][ii],0])+'.geojson'
+    #Get rupture surfaces, as created in get_rupture_traces.py, and mean geologic rupture rates
+    for ii in range(len(fault_rups)):
+        rup_str='OtagoFaults/rupture_surfaces/rupture_surface_'+str(fault_rups.iloc[ii,2])+'.geojson'
         rupture_geom[ii]=json.load(open(rup_str)) #get rupture geometry
-        rup_rate[ii]=fault_info.iloc[branch_indx[0][ii],8] #get rupture rate (from mean geologic_dm)
-       
-    os.chdir("..") #Go up one level in directory
-    os.chdir("..") #Go up one level in directory
-    os.chdir("scripts") #Go up one level in directory
-    
-    return(rupture_geom, rup_rate, fault_info)
+        rup_rate[ii]=fault_rups.iloc[ii,28] #get rupture rate (from mean geologic_dm)
+     
+    os.chdir("scripts") #Go up one level in directory    
+    return(rupture_geom, rup_rate, fault_rups)
 
 # define a projection from lat/lon to NZTM
 projected_crs = pyproj.CRS.from_epsg(2193)
@@ -68,50 +57,20 @@ projector = pyproj.Transformer.from_crs('epsg:4326', projected_crs, always_xy=Tr
 
 os.chdir("..") #Go up one level in directory
 os.chdir("..") #Go up one level in directory
+os.chdir("..") #Go up one level in directory
 
-nzcfm_ds=ogr.Open("gis_files/NZ_CFM_v1_0.shp", 1)
-nzcfm_layer=nzcfm_ds.GetLayer()
+nzcfm= gpd.read_file("gis_files/NZ_CFM_v1_0.shp")
 
-nz_coast_ds=ogr.Open("gis_files/nz-coastline-polygon_nztm.shp", 0)
-nz_coast_layer=nz_coast_ds.GetLayer()
-paths = []
-
-#Only read in South Island NZ Coast Feature
-nz_coast_feature=nz_coast_layer.GetFeature(0)
-geom = nz_coast_feature.geometry()
-all_x = []
-all_y = []
-
-for i in range(geom.GetGeometryCount()):
-    # Read ring geometry and create path
-    r = geom.GetGeometryRef(i)
-    x = [r.GetX(j) for j in range(r.GetPointCount())]
-    y = [r.GetY(j) for j in range(r.GetPointCount())]
-    all_x += x
-    all_y += y
-coastpoly = mpath.Path(np.column_stack((all_x,all_y)))
-paths.append(coastpoly)
+nz_coast=gpd.read_file("gis_files/nz-coastline-polygon_nztm.shp")
 
 os.chdir("nshm_inversion/solvis/scripts") #Go back to scripts
 
-
 fig, ax1 = plt.subplots(1,1,sharex=True,layout='constrained',figsize=(6.5,11)) 
-
-#Plot coastline
-for coastpoly in paths:
-    coast_patch = mpatches.PathPatch(coastpoly, \
-            facecolor='green', edgecolor='black', alpha=0.1)
-    ax1.add_patch(coast_patch)
   
+#Plot coast line 
+nz_coast.plot(ax=ax1,facecolor="green",edgecolor="black",alpha=0.1)  
 #Plot NZCFM       
-for pp in range(nzcfm_layer.GetFeatureCount()):
-     nzcfm_feature=nzcfm_layer.GetFeature(pp)
-     nzcfm_geometry=nzcfm_feature.GetGeometryRef()
-     nzcfm_x=np.empty([nzcfm_geometry.GetPointCount(),1])   
-     nzcfm_y=np.empty([nzcfm_geometry.GetPointCount(),1])
-     for rr in range(nzcfm_geometry.GetPointCount()):
-         nzcfm_x[rr],nzcfm_y[rr],z=nzcfm_geometry.GetPoint(rr)
-     ax1.plot(nzcfm_x,nzcfm_y,'r-') 
+nzcfm.plot(ax=ax1, linewidth=1,color='red')
 
 rup_color=['orange','blue','purple']
 
@@ -135,11 +94,10 @@ for ii in range(len(fault_select)):
             x,y = projected_polygon.exterior.xy
         
             polygon_patch = mpatches.Polygon(np.stack([x,y],axis=1),edgecolor='black',
-                   facecolor=rup_color[ii], alpha=(12+np.log10(rup_rate[jj]))/50)
+                   facecolor=rup_color[ii], alpha=((12+np.log10(rup_rate[jj]))/50)[0])
             #plot patch
             ax1.add_patch(polygon_patch)
-
-#Adjust axis limits as necessary depending on selected faults
+ 
 ax1.set_xlim([1.245*10e5, 1.45*10e5])
 y_lim=([4.85*10e5, 5.15*10e5])
 ax1.set_ylim(y_lim[0], y_lim[1]) 
@@ -168,6 +126,10 @@ ax1.tick_params(axis='y', labelrotation = 90)
 ax1.set_xlabel('NZTM X') 
 ax1.set_ylabel('NZTM Y') 
 
+os.chdir('..')
+#Export figure, adjust filename as necessary
+plt.savefig('OtagoFaults/pisa_akatore_dunstan_rup_maps.jpg')
+os.chdir('scripts')
 
 
 

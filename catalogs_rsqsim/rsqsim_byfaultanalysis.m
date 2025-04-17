@@ -5,9 +5,7 @@
 mydir  = pwd; idcs   = strfind(mydir,'/');
 addpath(mydir(1:idcs(end)-1));
 
-%should be consistent with mu in rupture_patches.py and rigidity
-%in catalogs_stocastic/fault_recurrence_parameters
-rigidity=3e10;
+addpath([mydir(1:idcs(end)-1),'/catalogs_stochastic/model2']); load('orb_fault_parameters','rigidity');
 load('catalog_rsqsim_statistics','rsqsim_mag_range');
 
 %Index events by fault in catalog based on the rupture patches output
@@ -84,12 +82,10 @@ fault_mo(tmp_indx1,2)=fault_mo(tmp_indx1,2)+orb_faults.SR_pref(tmp_indx2)*10^-3*
 
 %% Derive moment rate of faults in NZ CFM following IFM slip rate reduction
 
-addpath([mydir(1:idcs(end)-1),'/nshm_inversion/mfd_analysis/by_fault']);
+addpath([mydir(1:idcs(end)-1),'/nshm_inversion/mfd_analysis/by_fault_geo']);
 
-%add nshm fault stats from weighted mean logic tree branch (5) and weighted geolgoc logic tree branches(9)
-%Files are created in nshm_inversion/mfd_analysis/nshm_otago_inversion_results_by_fault.m
-load nshm_fault_stats5; nshm_fault_stats5=nshm_fault_stats; clear nshm_fault_stats
-load nshm_fault_stats9; nshm_fault_stats9=nshm_fault_stats; clear nshm_fault_stats
+%add nshm fault stats from weighted mean geologic_dm logic tree branches
+load nshm_fault_stats
 
 otago_faults_nshm=readtable([mydir(1:idcs(end)-1),'/nshm_inversion/mfd_analysis/otago_fault_list_20240428.csv']);
 nshm_fault_nzcfm_mo_rate=zeros(height(otago_faults_nshm),1);
@@ -103,47 +99,27 @@ for ii=1:height(otago_faults_nshm)
 end
 
 %remove path so doesn't get confused by fault catalog to search for
-rmpath([mydir(1:idcs(end)-1),'/nshm_inversion/mfd_analysis/by_fault']);
+rmpath([mydir(1:idcs(end)-1),'/nshm_inversion/mfd_analysis/by_fault_geo']);
 
 
 %% Plot distribution of fault magnitudes for RSQSim and the IFM
 figure(1);
 num_fault=43;
 
-tiledlayout(2,1,'TileSpacing','compact')
-
-title_opt=["(a)","(b)"];
-
-for ii=1:2
-
-    nexttile
-    if ii==1
-        nshm_fault_stats=nshm_fault_stats9; %load results from central geologic deformation model branch
-    elseif ii==2
-        nshm_fault_stats=nshm_fault_stats5; %load results from weighted mean results
-    end
-
-    %plot nshm mags
-    errorbar([1:1:num_fault],nshm_fault_stats([1:1:41,44,45],3),nshm_fault_stats([1:1:41,44,45],3)-nshm_fault_stats([1:1:41,44,45],4),nshm_fault_stats([1:1:41,44,45],5)-nshm_fault_stats([1:1:41,44,45],3),...
-        "o","MarkerFaceColor",[1 1 1],'LineWidth',1.2,'Color',[0 0 0],"MarkerEdgeColor",[0 0 0]);hold on
-    %plot for RSQSim
-    errorbar([1:1:num_fault],rsqsim_fault_stats([1:1:41,43,44],2),rsqsim_fault_stats([1:1:41,43,44],3),...
+%plot nshm mags
+errorbar([1:1:num_fault],nshm_fault_stats([1:1:41,44,45],3),nshm_fault_stats([1:1:41,44,45],3)-nshm_fault_stats([1:1:41,44,45],4),nshm_fault_stats([1:1:41,44,45],5)-nshm_fault_stats([1:1:41,44,45],3),...
+        "o","MarkerFaceColor",[1 1 1],'LineWidth',1.2,'Color',[0 0 0],"MarkerEdgeColor",[0 0 0]);hold on%plot for RSQSim
+errorbar([1:1:num_fault],rsqsim_fault_stats([1:1:41,43,44],2),rsqsim_fault_stats([1:1:41,43,44],3),...
         "o","MarkerFaceColor",[1 1 1],'LineWidth',1.2,'Color',[1 0 0],"MarkerEdgeColor",[1 0 0]);hold on;
 
-    xticks([1:1:num_fault]);
-    xticklabels(otago_faults.name([1:1:41,43,44]));
+xticks([1:1:num_fault]);
+xticklabels(otago_faults.name([1:1:41,43,44]));
 
-    ax=gca; ax.XAxis.FontSize = 7.5; xtickangle(60); ylim([6.6 8.35]);
+ax=gca; ax.XAxis.FontSize = 7.5; xtickangle(60); ylim([6.6 8.35]);
 
-    legend('IFM','RSQSim','Location','southeast');
+legend('IFM','RSQSim','Location','southeast');
 
-
-    t1=title(title_opt(ii),'fontsize',12,'fontweight','normal');
-    set(t1, 'horizontalAlignment', 'left'); set(t1, 'units', 'normalized');
-    h1 = get(t1, 'position'); set(t1, 'position', [-0.1 h1(2) h1(3)]);
-end
-
-set(gcf,'Position',[430 89 686 708]);
+set(gcf,'Position',[430 89 686 370]);
 
 %% Plot all fault analysis figures 
 
@@ -171,7 +147,7 @@ nexttile
 
 %plot NSHM moment rate comparison (for central logic tree branch)
 plot([axislimits(1) axislimits(2)],[axislimits(1) axislimits(2)],'k--'); hold on
-plot(log10(nshm_fault_nzcfm_mo_rate),log10(nshm_fault_stats9(:,1)),'kx','MarkerSize',12,'LineWidth',1.5);hold on
+plot(log10(nshm_fault_nzcfm_mo_rate),log10(nshm_fault_stats(:,1)),'kx','MarkerSize',12,'LineWidth',1.5);hold on
 axis([axislimits(1) axislimits(2) axislimits(1)  axislimits(2)]); axis square; hold on; 
 
 xlabel('NZ CFM Moment Rate (log Nm/yr)'),ylabel(['NZ NSHM 2022 IFM weighted geologic',char(10), 'mean Moment Rate (log Nm/yr)']);
@@ -186,7 +162,7 @@ nexttile
 %bar plot for the number of ruptures in each inversion solution
 
 load([mydir(1:idcs(end)-1),'/nshm_inversion/mfd_analysis/nshm_otago_inversion_results'],'geo_branch_rupture_rates',...
-    'ged_branch_rupture_rates','logic_tree_branches','geo_branch_indx','ged_branch_indx','num_branches');
+    'ged_branch_rupture_rates','num_branches');
 
 tmp_txt_geo=cell(1,3);tmp_txt_ged=cell(1,3);
 
@@ -194,17 +170,12 @@ for mm=1:num_branches
 
     geo_rup_count(mm)=height(geo_branch_rupture_rates{mm});
     ged_rup_count(mm)=height(ged_branch_rupture_rates{mm});
-    
-    tmp_txt_geo{mm}=strcat(cell2mat(logic_tree_branches.deformation_model(geo_branch_indx(mm),:)),...
-        cell2mat(logic_tree_branches.bN_pair(geo_branch_indx(mm),:)));
-    tmp_txt_ged{mm}=strcat(cell2mat(logic_tree_branches.deformation_model(ged_branch_indx(mm),:)),...
-        cell2mat(logic_tree_branches.bN_pair(ged_branch_indx(mm),:)));
 end
-
 
 b1=bar(horzcat(geo_rup_count,ged_rup_count));
 alphaValue = 0.3; set(b1, 'FaceAlpha', alphaValue);
-xticklabels([tmp_txt_ged,tmp_txt_geo]); ax1=gca; 
+xticklabels({'dm geologic bN[0.823, 2.7]','dm geologic bN[0.959, 3.4]','dm geologic bN[1.089, 4.6]', ...
+    'dm geodetic bN[0.823, 2.7]','dm geodetic bN[0.959, 3.4]','dm geodetic bN[1.089, 4.6]'}); ax1=gca; 
 ax1.XAxis.FontSize = 8.5; xtickangle(45);
 
 xlabel('logic tree branch','fontsize',11); ylabel('number of ruptures'); axis square; 
@@ -240,11 +211,13 @@ window_length=70000; %time window sampling
 p_mag_rate=zeros(length(rsqsim_mag_range),length(fault_select));
 mag_rate=zeros(length(rsqsim_mag_range),length(fault_select));
 %Legend1=cell(length(fault_select),1); Legend2=cell(length(fault_select),1);
+
 col_opt=vertcat([1 0 0],[0 0 0],[0 0 1]);%may need to update depending on number of faults selected
 
 label_opt=["(a)","(b)","(c)","(d)","(e)","(f)"]; count=0;
 
-tmp_mag_range=[6.9:0.1:8.4];
+tmp_mag_range=[6.9:0.1:8.4]; nshm_mag_range=[6.5:0.05:8.35];
+mfd_rate1=zeros(length(nshm_mag_range),1); mdf_rate2=zeros(length(nshm_mag_range),1);
 
 figure(3);
 
@@ -271,32 +244,30 @@ for jj=1:length(fault_select)
         p_mag_rate(kk,jj)=length(find(catalog.partial_mw >= rsqsim_mag_range(kk)))/(num_simu_rsqsim);  
     end
     
-    addpath([mydir(1:idcs(end)-1),'/nshm_inversion/mfd_analysis/by_fault']);
-    
+    addpath([mydir(1:idcs(end)-1),'/nshm_inversion/mfd_analysis/by_fault_geo']);
+
     %derive annual frequency of exceedance for each mag in NSHM 2022 IFM
     tmp_table=readtable(strjoin(fault_select_nshm(jj),'.csv'));%read in fault data
     
     %remove path so doesn't get confused by fault catalog to search for
-    rmpath([mydir(1:idcs(end)-1),'/nshm_inversion/mfd_analysis/by_fault']);
-    nshm_mag_range=[6.5:0.05:8.35];
+    rmpath([mydir(1:idcs(end)-1),'/nshm_inversion/mfd_analysis/by_fault_geo']);
+    
     
     for kk=1:length(nshm_mag_range)
       
         %MFD rate for full rupture magntitudes
-        rup_indx1{kk}=find(tmp_table.rup_mw>nshm_mag_range(kk));
+        rup_indx1=find(tmp_table.rup_mw>nshm_mag_range(kk));
      
-        mfd_rate1(kk,:)=[sum(tmp_table.weighted_mean_rate(rup_indx1{kk})),sum(tmp_table.weighted_geologic_mean(rup_indx1{kk})),...
-            sum(tmp_table.weighted_geodetic_mean(rup_indx1{kk}))];
+        mfd_rate1(kk,:)=sum(tmp_table.weighted_mean(rup_indx1));
      
         %MFD rate for partial magnitudes
-        rup_indx2{kk}=find(tmp_table.rup_weighted_mw>nshm_mag_range(kk));
-        mfd_rate2(kk,:)=[sum(tmp_table.weighted_mean_rate(rup_indx2{kk})),sum(tmp_table.weighted_geologic_mean(rup_indx2{kk})),...
-            sum(tmp_table.weighted_geodetic_mean(rup_indx2{kk}))];
+        rup_indx2=find(tmp_table.rup_weighted_mw>nshm_mag_range(kk));
+        mfd_rate2(kk,:)=sum(tmp_table.weighted_mean(rup_indx2));
      
     end
     
     %total rate for weighted geologic mean rate
-    total_rup_rate=sum(tmp_table.weighted_geologic_mean); mag_counts=zeros(length(tmp_mag_range),2);
+    total_rup_rate=sum(tmp_table.weighted_mean); mag_counts=zeros(length(tmp_mag_range),2);
     
     %derive counts for IFM magntiude bins
     for kk=1:length(tmp_mag_range)-1
@@ -304,7 +275,7 @@ for jj=1:length(fault_select)
        mag_indx=find(tmp_table.rup_mw>tmp_mag_range(kk) & tmp_table.rup_mw<tmp_mag_range(kk+1));
         %Weight bins by rupture rate
        if isempty(mag_indx)==0
-            mag_counts(kk,1)=length(mag_indx)*sum(tmp_table.weighted_geologic_mean(mag_indx))/total_rup_rate;
+            mag_counts(kk,1)=length(mag_indx)*sum(tmp_table.weighted_mean(mag_indx))/total_rup_rate;
        end
 
     %mag_count for rsqsim_catalog
@@ -331,8 +302,8 @@ for jj=1:length(fault_select)
     semilogy(rsqsim_mag_range,p_mag_rate(:,jj),'Color',[col_opt(1,:) 0.5],'LineWidth',1.5,'LineStyle','-','Marker','none'); hold on %plot MFD for partial moment release
     
     %plot NSHM, for weighted geologic results
-    semilogy(nshm_mag_range,mfd_rate1(:,2),'Color',col_opt(2,:),'LineWidth',1.5,'LineStyle','-','Marker','none'); hold on %plot total MFD
-    semilogy(nshm_mag_range,mfd_rate2(:,2),'Color',[col_opt(2,:) 0.5],'LineWidth',1.5,'LineStyle','-','Marker','none'); hold on %plot MFD for partial moment release
+    semilogy(nshm_mag_range,mfd_rate1(:,1),'Color',col_opt(2,:),'LineWidth',1.5,'LineStyle','-','Marker','none'); hold on %plot total MFD
+    semilogy(nshm_mag_range,mfd_rate2(:,1),'Color',[col_opt(2,:) 0.5],'LineWidth',1.5,'LineStyle','-','Marker','none'); hold on %plot MFD for partial moment release
     
     
     xlabel('Magnitude');ylabel('Annual rate of exceedance'); set(gca,'YColor',[0 0 0]);
@@ -384,7 +355,7 @@ end
 
 set(gcf,'position',[250 87 617 710]);
 
-%% Plots results from different faults in same plot 
+%% ARCHIVE: Plots results from different faults in same plot Fault specific analysis
 
 fault_select=["nwcardronasouth","nwcardronanorth","pisa"];
 %fault_select=["akatore","titrisouth","titricombined"];
@@ -394,7 +365,7 @@ time_int=[6.0*1e5 6.75*1e5];
 p_mag_rate=zeros(length(rsqsim_mag_range),length(fault_select));
 mag_rate=zeros(length(rsqsim_mag_range),length(fault_select));
 Legend1=cell(length(fault_select),1); Legend2=cell(length(fault_select),1);
-col_opt=vertcat([1 0 0],[0 0 0],[0 0 1]);%length of this must equal number of faults selected
+col_opt=vertcat([1 0 0],[0 0 0],[0 0 1]);%may need to update depending on number of faults selected
 
 figure(3);
 

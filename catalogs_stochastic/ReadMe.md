@@ -4,13 +4,14 @@ Generate and analyse 1 million year long stochastic event catalogs for Otago fau
 
 ## RUN THIS FIRST
 
-catalog_stochastic/fault_recurrence_parameters.m: Extracts NZ CFM attributes on Otago fault from 'OtagoRangeBasinFaults.xlsx' to derive their moment rate and recurrence model (i.e., fault specific annual rate of events >=M_min and magnitude probability distribution function). Here, the area of fault has been calculated from the function orb_fault_geometiees/faultgeometries.m and saved in 'OtagoRangeBasinFaults.xlsx.' If recurrence model is set to 4, uses slip rate data from the NZ NSHM 2022 Geodetic Model (Johnson et al 2022,2024). If recurrence model is set to 1-3, uses slip rate data from the NZ CFM (Seebeck et al 2022,2024, see also folder 'orb_fault_geometries'). Recurrence model options 1-3 represent different aperiodicites [0.5, 2, 4] for the Brownian Passage Time and Weibull catalogs. Recurrence parameters are stored in folders model1, model2, or model3 depending on the aperiodicity that is selected (or folder model4 if geodetic slip rates are selected). If creating recurrence models for geodetic rates, run nshm_geodeticrates/extract_otago_sections.py first.
+catalog_stochastic/fault_recurrence_parameters.m: Extracts NZ CFM attributes on Otago fault from 'OtagoRangeBasinFaults.xlsx' to derive their moment rate and recurrence model (i.e., fault specific annual rate of events >=M_min and magnitude probability distribution function). Here, the area of fault has been calculated from the function orb_fault_geometies/faultgeometries.m and saved in 'OtagoRangeBasinFaults.xlsx.' If recurrence model is set to 4, uses slip rate data from the NZ NSHM 2022 Geodetic Model (Johnson et al 2022,2024). If recurrence model is set to 1-3, uses slip rate data from the NZ CFM (Seebeck et al 2022,2024, see also folder 'orb_fault_geometries'). Recurrence model options 1-3 represent different aperiodicites [0.5, 2, 4] for the Brownian Passage Time and Weibull catalogs. Recurrence parameters are stored in folders model1, model2, or model3 depending on the aperiodicity that is selected (or folder model4 if geodetic slip rates are selected). If creating recurrence models for geodetic rates, run nshm_geodeticrates/extract_otago_sections.py first.
 
 All recurrence models use NZ CFM geometry model. Recurrence models are then developed assuming Gutenberg-Richter and characteristic on-fault magnitude frequency distributions (Youngs and Coppersmith 1985, Convertito 2006) using the function "characteristic_magnitude_YC1985.m," originally written by Katsu Goda (e.g., Goda and Sharipov 2021). Code generates inputs 'orb_fault_combined,' 'orb_fault_parameters,' and 'orb_faults_segmented,' which are *REQUIRED* to generate the various stochastic event catalogs
 
 ## THEN GENERATE CATALOGS!
+!These files require that catalogs_instrumental/nz_integrated_eq_catalog.m is run first!
 
-catalog_stochastic/catalog_bpt.m: Generates stochastic event catalogs for segmented-char, combined-char, and combined-GR recurrence models and a Brownian Passage Time (BPT) renewal process. Uses a Brownian Relaxation Oscillator (Matthews et al 2002) to realize the BPT model. Need to select aperiodicity of BPT model that is being simulated, and whether using NZ CFM or geodetic model slip rates. Returns catalog as 'catalog_BPT' in relevant folders model1-model4. Also option to save the evolution of the load state variable for each fault within the catalogs.
+catalog_stochastic/catalog_bpt.m: Generates stochastic event catalogs for segmented-char, combined-char, and combined-GR recurrence models and a Brownian Passage Time (BPT) renewal process. Uses a Brownian Relaxation Oscillator (Matthews et al 2002) to realize the BPT model. Need to select aperiodicity of BPT model that is being simulated, and whether using NZ CFM or geodetic model slip rates. Returns catalog as 'catalog_BPT' in relevant folders model1-model4. Also option to save the evolution of the load state variable for each fault within the catalogs. 
 
 catalog_stochastic/catalog_poisson.m: Generates stochastic event catalog for Poisson earthquake interevent times. Note there is no strict need to run for different aperiodicities, as it is implicit that this = 1 in a Poisson process. Hence, can generate catalog once, and then copy .mat file to other model folders. Does need to be run separately for Model 4 as that uses a different slip rate input. Catalogs run for all on-fault MFDs.
 
@@ -32,7 +33,7 @@ catalog_stochastic/plot_emptycounts.m: For each stochastic event catalog, plot n
 
 catalog_stochastic/plot_intertimes.m: Plots interevent times and hazard functions for fault ff in different stochastic catalogs. Used for Figure S9 in manuscript.
 
-catalogs_stochastic/plot_recurrence_model.m: Compare median MFDs for multiple faults from Young and Coppersmith (1985) recurrence models (e.g., Figure 2c in manuscript), and compare all MFD's for a single fault from exploring all b-value M-max combinations (e.g., Figure S8).
+catalogs_stochastic/plot_recurrence_model.m: Compare median MFDs for multiple faults from Young and Coppersmith (1985) recurrence models (e.g., Figure 2c in manuscript), and compare all MFD's for a single fault from exploring all b-value M-max combinations (e.g., Figure S6b).
 
 ## REFERENCE
 
@@ -48,8 +49,6 @@ catalogs_stochastic/plot_recurrence_model.m: Compare median MFDs for multiple fa
 -Seebeck, H., R. J. Van Dissen, N. J. Litchfield, P. M. Barnes, A. Nicol, R. M. Langridge, D. J. A. Barrell, P. Villamor, S. M. Ellis, M. S. Rattenbury, et al. (2022). New Zealand Community Fault Model–version 1.0, GNS Science report 2021/57, GNS Science, Lower Hutt, New Zealand, 97 pp., doi: 10.21420/GA7S-BS61.
 
 -Seebeck, H., Van Dissen, R., Litchfield, N., Barnes, P. M., Nicol, A., Langridge, R., ... & Lee, J. (2024). The New Zealand Community Fault Model–version 1.0: An improved geological foundation for seismic hazard modelling. New Zealand Journal of Geology and Geophysics, 67(2), 209-229.
-
--Tinti, S., & Mulargia, F. (1987). Confidence intervals of b values for grouped magnitudes. Bulletin of the Seismological Society of America, 77(6), 2125-2134.
 
 -Yakovlev, G., Turcotte, D. L., Rundle, J. B., & Rundle, P. B. (2006). Simulation-based distributions of earthquake recurrence times on the San Andreas fault system. Bulletin of the Seismological Society of America, 96(6), 1995-2007.
 

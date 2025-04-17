@@ -1,11 +1,12 @@
-%% Select Otago range and basin events from Augmented NZ Catalog and plot MFD %%
+%% Select Otago range and basin events from NZ integrated earthquake catalog and plot MFD %%
 
 close all
 
 mydir  = pwd; idcs   = strfind(mydir,'/');
 addpath(mydir(1:idcs(end)-1));
 
-%Read in NZ augmented earthquake catalog (Rollins et al., 2022: https://geodata.nz/geonetwork/srv/api/records/00876699-4791-4528-a826-1d7ac3c77516) 
+%Read in NZ augmented earthquake catalog (Rollins et al., 2022, 2025: 
+%https://geodata.nz/geonetwork/srv/api/records/00876699-4791-4528-a826-1d7ac3c77516) 
 aug_catalog=readtable('NZNSHM2022_augmentedEQcatalogue_annotated_2Aug2022');
 
 %Extract following parameters from augmented catalog:
