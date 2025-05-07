@@ -223,12 +223,12 @@ nshm2022_combined_rate=zeros(length(mag_range_nshm2022_combined),2);
 
 for ii=1:length(mag_range_nshm2022_combined)
     
-    if mag_range_nshm2022_combined(ii)<6.9
+    if mag_range_nshm2022_combined(ii)<6.7
        %rate entirely described by the URZ (negative binomial model)
        mag_indx=ii; %this only works when both mag range increments are 0.05 and start at M4.95!
        nshm2022_combined_rate(ii,:)=urz_mag_rate(mag_indx,1);
        
-    elseif mag_range_nshm2022_combined(ii)>=6.9 && mag_range_nshm2022_combined(ii)<=8.0  
+    elseif mag_range_nshm2022_combined(ii)>=6.7 && mag_range_nshm2022_combined(ii)<=8.0  
        %rate  combination of the URZ (negative binomial model) and IFM
        mag_indx1=ii; %this only works when both mag range increments are 0.05 and start at M4.95!
        mag_indx2=find(round(mag_range_nshm2022,3)==round(mag_range_nshm2022_combined(ii),3));
