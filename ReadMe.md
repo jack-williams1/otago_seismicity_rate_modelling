@@ -3,7 +3,7 @@
 
 The following contains the codes used to perform the analysis in:
 
-Williams JN, Stirling MW, Howell A, Niroula G, DiCaprio C, McGrath J, Gerstenberger MC, Coffey G, Griffin JD, van Dissen R, Penney C, Chamberlain C (submitted) Evaluating and comparing seismicity rate models in the low strain rate Otago region, Aotearoa New Zealand
+Williams JN, Stirling MW, Howell A, Niroula G, DiCaprio C, McGrath J, Gerstenberger MC, Coffey G, Griffin JD, van Dissen R, Penney C, Chamberlain C (2025) Evaluating and comparing seismicity rate models in the low strain rate Otago region, Aotearoa New Zealand, Bulletin of the Seismological Society of America, 115(5), 2237-2262.https://doi.org/10.1785/0120240277
 
 This study considers multiple seismicity rate models (SRMs) that have been developed for the Otago region of New Zealand Aotearoa. Codes are written in a combination of Python and MATLAB. The relevant analyses, inputs, and an associated ReadMe file, for each SRM is contained within its own folder. In addition, we signpost which codes were used to generate the figures in Williams et al (submitted):
 
